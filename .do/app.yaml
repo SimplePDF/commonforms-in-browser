@@ -1,0 +1,12 @@
+name: commonforms-simplepdf
+region: fra
+static_sites:
+  - name: web
+    github:
+      repo: "SimplePDF/commonforms-in-browser"
+      branch: master
+      deploy_on_push: true
+    build_command: npm run build
+    output_dir: dist
+    routes:
+      - path: /
