@@ -3,8 +3,14 @@ export function Header() {
     <>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center justify-between">
           Browser-based PDF Form Fields detection
+          <iframe
+            src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-in-browser&type=star&count=true&size=large"
+            width="150"
+            height="30"
+            title="GitHub"
+          ></iframe>
         </h1>
         <p className="text-gray-600 text-lg">
           Automatically detect form fields in PDFs with CommonForms using ONNX
