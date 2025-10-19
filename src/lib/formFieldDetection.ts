@@ -8,12 +8,9 @@ interface DetectedField {
   confidence: number;
 }
 
-interface DetectionData {
-  pageCount: number;
+interface PageDetectionData {
   fields: DetectedField[];
   imageData: string;
-  processingTime: number;
-  modelInfo: string;
   pdfMetadata: {
     originalWidth: number;
     originalHeight: number;
@@ -21,6 +18,12 @@ interface DetectionData {
     offsetX: number;
     offsetY: number;
   };
+}
+
+interface DetectionData {
+  pages: PageDetectionData[];
+  processingTime: number;
+  modelInfo: string;
 }
 
 export interface DetectionParameters {
@@ -102,6 +105,135 @@ const drawDetections = (
   });
 };
 
+const processPage = async (
+  page: pdfjsLib.PDFPageProxy,
+  session: ort.InferenceSession,
+  confidenceThreshold: number
+): Promise<PageDetectionData> => {
+  const viewport = page.getViewport({ scale: 1.0 });
+  const scale = Math.min(
+    TARGET_SIZE / viewport.width,
+    TARGET_SIZE / viewport.height
+  );
+  const scaledViewport = page.getViewport({ scale });
+
+  const tempCanvas = document.createElement("canvas");
+  const tempContext = tempCanvas.getContext("2d")!;
+  tempCanvas.height = scaledViewport.height;
+  tempCanvas.width = scaledViewport.width;
+
+  await page.render({
+    canvasContext: tempContext,
+    viewport: scaledViewport,
+    canvas: tempCanvas,
+  }).promise;
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d")!;
+  canvas.width = TARGET_SIZE;
+  canvas.height = TARGET_SIZE;
+
+  context.fillStyle = "white";
+  context.fillRect(0, 0, TARGET_SIZE, TARGET_SIZE);
+
+  const offsetX = (TARGET_SIZE - tempCanvas.width) / 2;
+  const offsetY = (TARGET_SIZE - tempCanvas.height) / 2;
+  context.drawImage(tempCanvas, offsetX, offsetY);
+
+  const imageData = context.getImageData(0, 0, TARGET_SIZE, TARGET_SIZE);
+
+  const rgbData = new Float32Array(3 * canvas.height * canvas.width);
+
+  for (let i = 0; i < imageData.data.length / 4; i++) {
+    const r = imageData.data[i * 4] / 255.0;
+    const g = imageData.data[i * 4 + 1] / 255.0;
+    const b = imageData.data[i * 4 + 2] / 255.0;
+
+    rgbData[i] = r;
+    rgbData[canvas.height * canvas.width + i] = g;
+    rgbData[2 * canvas.height * canvas.width + i] = b;
+  }
+
+  const tensor = new ort.Tensor("float32", rgbData, [
+    1,
+    3,
+    canvas.height,
+    canvas.width,
+  ]);
+
+  const feeds = { images: tensor };
+  const output = await session.run(feeds);
+
+  const outputTensor = output["output0"];
+  const outputData = outputTensor.data as Float32Array;
+  const outputDims = outputTensor.dims as number[];
+
+  const numPredictions = outputDims[2];
+  const detections: Array<{
+    box: [number, number, number, number];
+    classId: number;
+    confidence: number;
+  }> = [];
+
+  for (let i = 0; i < numPredictions; i++) {
+    const cx = outputData[i];
+    const cy = outputData[numPredictions + i];
+    const w = outputData[2 * numPredictions + i];
+    const h = outputData[3 * numPredictions + i];
+
+    const class0Score = outputData[4 * numPredictions + i];
+    const class1Score = outputData[5 * numPredictions + i];
+    const class2Score = outputData[6 * numPredictions + i];
+
+    const scores = [class0Score, class1Score, class2Score];
+    const maxScore = Math.max(...scores);
+    const classId = scores.indexOf(maxScore);
+
+    if (maxScore > confidenceThreshold) {
+      detections.push({
+        box: [
+          cx / TARGET_SIZE,
+          cy / TARGET_SIZE,
+          w / TARGET_SIZE,
+          h / TARGET_SIZE,
+        ],
+        classId,
+        confidence: maxScore,
+      });
+    }
+  }
+
+  const nmsDetections = applyNonMaximumSuppression(detections, IOU_THRESHOLD);
+
+  const unsortedFields: DetectedField[] = nmsDetections.map((det) => {
+    const [cx, cy, w, h] = det.box;
+    const adjustedH = h * ADJUSTED_HEIGHT_FACTOR;
+    const x0 = cx - w / 2;
+    const y0 = cy + h / 2 - adjustedH;
+    return {
+      type: CLASS_NAMES[det.classId],
+      bbox: [x0, y0, w, adjustedH],
+      confidence: det.confidence,
+    };
+  });
+
+  const fields = sortFieldsByReadingOrder(unsortedFields);
+
+  drawDetections(canvas, fields);
+
+  return {
+    fields,
+    imageData: canvas.toDataURL(),
+    pdfMetadata: {
+      originalWidth: viewport.width,
+      originalHeight: viewport.height,
+      canvasSize: TARGET_SIZE,
+      offsetX,
+      offsetY,
+    },
+  };
+};
+
 export const detectFormFields = async (
   parameters: DetectionParameters
 ): Promise<DetectionResult> => {
@@ -114,52 +246,6 @@ export const detectFormFields = async (
     onUpdateDetectionStatus("Loading PDF...");
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const page = await pdf.getPage(1);
-
-    const viewport = page.getViewport({ scale: 1.0 });
-    const scale = Math.min(
-      TARGET_SIZE / viewport.width,
-      TARGET_SIZE / viewport.height
-    );
-    const scaledViewport = page.getViewport({ scale });
-
-    const tempCanvas = document.createElement("canvas");
-    const tempContext = tempCanvas.getContext("2d")!;
-    tempCanvas.height = scaledViewport.height;
-    tempCanvas.width = scaledViewport.width;
-
-    await page.render({
-      canvasContext: tempContext,
-      viewport: scaledViewport,
-      canvas: tempCanvas,
-    }).promise;
-
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d")!;
-    canvas.width = TARGET_SIZE;
-    canvas.height = TARGET_SIZE;
-
-    context.fillStyle = "white";
-    context.fillRect(0, 0, TARGET_SIZE, TARGET_SIZE);
-
-    const offsetX = (TARGET_SIZE - tempCanvas.width) / 2;
-    const offsetY = (TARGET_SIZE - tempCanvas.height) / 2;
-    context.drawImage(tempCanvas, offsetX, offsetY);
-
-    onUpdateDetectionStatus("Preprocessing image...");
-    const imageData = context.getImageData(0, 0, TARGET_SIZE, TARGET_SIZE);
-
-    const rgbData = new Float32Array(3 * canvas.height * canvas.width);
-
-    for (let i = 0; i < imageData.data.length / 4; i++) {
-      const r = imageData.data[i * 4] / 255.0;
-      const g = imageData.data[i * 4 + 1] / 255.0;
-      const b = imageData.data[i * 4 + 2] / 255.0;
-
-      rgbData[i] = r;
-      rgbData[canvas.height * canvas.width + i] = g;
-      rgbData[2 * canvas.height * canvas.width + i] = b;
-    }
 
     const modelName = modelPath.includes("FFDNet-L")
       ? "FFDNet-L"
@@ -175,93 +261,32 @@ export const detectFormFields = async (
       executionProviders: ["wasm"],
     });
 
-    const tensor = new ort.Tensor("float32", rgbData, [
-      1,
-      3,
-      canvas.height,
-      canvas.width,
-    ]);
+    const pages: PageDetectionData[] = [];
 
-    const feeds = { images: tensor };
-    const output = await session.run(feeds);
-
-    const outputTensor = output["output0"];
-    const outputData = outputTensor.data as Float32Array;
-    const outputDims = outputTensor.dims as number[];
-
-    const numPredictions = outputDims[2];
-    const detections: Array<{
-      box: [number, number, number, number];
-      classId: number;
-      confidence: number;
-    }> = [];
-
-    for (let i = 0; i < numPredictions; i++) {
-      const cx = outputData[i];
-      const cy = outputData[numPredictions + i];
-      const w = outputData[2 * numPredictions + i];
-      const h = outputData[3 * numPredictions + i];
-
-      const class0Score = outputData[4 * numPredictions + i];
-      const class1Score = outputData[5 * numPredictions + i];
-      const class2Score = outputData[6 * numPredictions + i];
-
-      const scores = [class0Score, class1Score, class2Score];
-      const maxScore = Math.max(...scores);
-      const classId = scores.indexOf(maxScore);
-
-      if (maxScore > confidenceThreshold) {
-        detections.push({
-          box: [
-            cx / TARGET_SIZE,
-            cy / TARGET_SIZE,
-            w / TARGET_SIZE,
-            h / TARGET_SIZE,
-          ],
-          classId,
-          confidence: maxScore,
-        });
-      }
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      onUpdateDetectionStatus(
+        `Processing page ${pageNum} of ${pdf.numPages}...`
+      );
+      const page = await pdf.getPage(pageNum);
+      const pageResult = await processPage(page, session, confidenceThreshold);
+      pages.push(pageResult);
     }
 
-    const nmsDetections = applyNonMaximumSuppression(detections, IOU_THRESHOLD);
-
-    const unsortedFields: DetectedField[] = nmsDetections.map((det) => {
-      const [cx, cy, w, h] = det.box;
-      const adjustedH = h * ADJUSTED_HEIGHT_FACTOR;
-      const x0 = cx - w / 2;
-      const y0 = cy + h / 2 - adjustedH;
-      return {
-        type: CLASS_NAMES[det.classId],
-        bbox: [x0, y0, w, adjustedH],
-        confidence: det.confidence,
-      };
-    });
-
-    const fields = sortFieldsByReadingOrder(unsortedFields);
-
     const endTime = performance.now();
-
-    drawDetections(canvas, fields);
+    const totalFields = pages.reduce(
+      (sum, page) => sum + page.fields.length,
+      0
+    );
 
     return {
       success: true,
       data: {
-        pageCount: pdf.numPages,
-        fields,
-        imageData: canvas.toDataURL(),
+        pages,
         processingTime: endTime - startTime,
         modelInfo:
           `Model: ${modelName}\n` +
-          `Detected Fields: ${fields.length}\n` +
+          `Detected Fields: ${totalFields}\n` +
           `Confidence Threshold: ${confidenceThreshold}`,
-        pdfMetadata: {
-          originalWidth: viewport.width,
-          originalHeight: viewport.height,
-          canvasSize: TARGET_SIZE,
-          offsetX,
-          offsetY,
-        },
       },
     };
   } catch (e) {

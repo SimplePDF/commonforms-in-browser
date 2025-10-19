@@ -123,7 +123,9 @@ export function FormFieldsDetection() {
     const pdfWithAcroFieldsBlobUrl = URL.createObjectURL(pdfBlob);
 
     setResult({
-      ...detectionResult.data,
+      pages: detectionResult.data.pages,
+      processingTime: detectionResult.data.processingTime,
+      modelInfo: detectionResult.data.modelInfo,
       pdfWithAcroFieldsBlobUrl,
     });
     setStatus({ type: "idle" });

@@ -48,16 +48,23 @@ export const applyAcroFields = async (
     const form = pdfDoc.getForm();
 
     const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
-    const { height: pageHeight } = firstPage.getSize();
-
-    const { fields } = detectionResult.data;
     const fieldTypeCounters: Record<string, number> = {};
 
-    const totalHeight = fields.reduce((sum, field) => sum + field.bbox[3], 0);
-    const meanHeight = totalHeight / fields.length;
+    for (let pageIndex = 0; pageIndex < detectionResult.data.pages.length; pageIndex++) {
+      const pageData = detectionResult.data.pages[pageIndex];
+      const pdfPage = pages[pageIndex];
+      const { height: pageHeight } = pdfPage.getSize();
 
-    for (const field of fields) {
+      const { fields, pdfMetadata } = pageData;
+
+      if (fields.length === 0) {
+        continue;
+      }
+
+      const totalHeight = fields.reduce((sum, field) => sum + field.bbox[3], 0);
+      const meanHeight = totalHeight / fields.length;
+
+      for (const field of fields) {
       const fieldType = field.type;
       if (!fieldTypeCounters[fieldType]) {
         fieldTypeCounters[fieldType] = 0;
@@ -67,7 +74,6 @@ export const applyAcroFields = async (
 
       const [x, y, w, h] = field.bbox;
 
-      const { pdfMetadata } = detectionResult.data;
       const { originalWidth, originalHeight, canvasSize, offsetX, offsetY } =
         pdfMetadata;
 
@@ -96,7 +102,7 @@ export const applyAcroFields = async (
           case "TextBox": {
             const isMultiline = heightRatio >= MULTILINE_HEIGHT_THRESHOLD;
             const textField = form.createTextField(fieldName);
-            textField.addToPage(firstPage, {
+            textField.addToPage(pdfPage, {
               x: absoluteX,
               y: absoluteY,
               width: absoluteW,
@@ -122,7 +128,7 @@ export const applyAcroFields = async (
           }
           case "ChoiceButton": {
             const checkBox = form.createCheckBox(fieldName);
-            checkBox.addToPage(firstPage, {
+            checkBox.addToPage(pdfPage, {
               x: absoluteX,
               y: absoluteY,
               width: absoluteW,
@@ -140,7 +146,7 @@ export const applyAcroFields = async (
           }
           case "Signature": {
             const signatureField = form.createTextField(fieldName);
-            signatureField.addToPage(firstPage, {
+            signatureField.addToPage(pdfPage, {
               x: absoluteX,
               y: absoluteY,
               width: absoluteW,
@@ -173,6 +179,7 @@ export const applyAcroFields = async (
           },
         };
       }
+    }
     }
 
     const pdfBytes = await pdfDoc.save();
