@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Host: commonforms.simplepdf.com
