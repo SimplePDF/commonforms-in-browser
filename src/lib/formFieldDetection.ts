@@ -1,6 +1,9 @@
-import * as ort from "onnxruntime-web";
 import * as pdfjsLib from "pdfjs-dist";
-import { applyNonMaximumSuppression } from "./utils";
+import InferenceWorker from "../workers/inference.worker.ts?worker";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+
+const TARGET_SIZE = 1216;
 
 interface DetectedField {
   type: string;
@@ -44,11 +47,6 @@ export type DetectionResult =
   | { success: true; data: DetectionData }
   | { success: false; error: { code: ErrorCode; message: string } };
 
-const CLASS_NAMES = ["TextBox", "ChoiceButton", "Signature"];
-const IOU_THRESHOLD = 0.45;
-const TARGET_SIZE = 1216;
-const ADJUSTED_HEIGHT_FACTOR = 1;
-
 const COLORS = {
   TextBox: {
     label: "#3B82F6",
@@ -62,18 +60,6 @@ const COLORS = {
     label: "#F59E0B",
     background: "#a4dcf891",
   },
-};
-
-const sortFieldsByReadingOrder = (fields: DetectedField[]): DetectedField[] => {
-  return [...fields].sort((a, b) => {
-    const [aX, aY] = a.bbox;
-    const [bX, bY] = b.bbox;
-    const yDiff = aY - bY;
-    if (Math.abs(yDiff) > 0.01) {
-      return yDiff;
-    }
-    return aX - bX;
-  });
 };
 
 const drawDetections = (
@@ -105,11 +91,18 @@ const drawDetections = (
   });
 };
 
-const processPage = async (
-  page: pdfjsLib.PDFPageProxy,
-  session: ort.InferenceSession,
-  confidenceThreshold: number
-): Promise<PageDetectionData> => {
+const renderPdfPageToImageData = async (
+  page: pdfjsLib.PDFPageProxy
+): Promise<{
+  imageData: ImageData;
+  pdfMetadata: {
+    originalWidth: number;
+    originalHeight: number;
+    canvasSize: number;
+    offsetX: number;
+    offsetY: number;
+  };
+}> => {
   const viewport = page.getViewport({ scale: 1.0 });
   const scale = Math.min(
     TARGET_SIZE / viewport.width,
@@ -117,113 +110,33 @@ const processPage = async (
   );
   const scaledViewport = page.getViewport({ scale });
 
-  const tempCanvas = document.createElement("canvas");
-  const tempContext = tempCanvas.getContext("2d")!;
-  tempCanvas.height = scaledViewport.height;
-  tempCanvas.width = scaledViewport.width;
+  const canvas = document.createElement("canvas");
+  canvas.width = scaledViewport.width;
+  canvas.height = scaledViewport.height;
+  const context = canvas.getContext("2d")!;
 
   await page.render({
-    canvasContext: tempContext,
+    canvasContext: context,
     viewport: scaledViewport,
-    canvas: tempCanvas,
+    canvas,
   }).promise;
 
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d")!;
-  canvas.width = TARGET_SIZE;
-  canvas.height = TARGET_SIZE;
+  const finalCanvas = document.createElement("canvas");
+  finalCanvas.width = TARGET_SIZE;
+  finalCanvas.height = TARGET_SIZE;
+  const finalContext = finalCanvas.getContext("2d")!;
 
-  context.fillStyle = "white";
-  context.fillRect(0, 0, TARGET_SIZE, TARGET_SIZE);
+  finalContext.fillStyle = "white";
+  finalContext.fillRect(0, 0, TARGET_SIZE, TARGET_SIZE);
 
-  const offsetX = (TARGET_SIZE - tempCanvas.width) / 2;
-  const offsetY = (TARGET_SIZE - tempCanvas.height) / 2;
-  context.drawImage(tempCanvas, offsetX, offsetY);
+  const offsetX = (TARGET_SIZE - canvas.width) / 2;
+  const offsetY = (TARGET_SIZE - canvas.height) / 2;
+  finalContext.drawImage(canvas, offsetX, offsetY);
 
-  const imageData = context.getImageData(0, 0, TARGET_SIZE, TARGET_SIZE);
-
-  const rgbData = new Float32Array(3 * canvas.height * canvas.width);
-
-  for (let i = 0; i < imageData.data.length / 4; i++) {
-    const r = imageData.data[i * 4] / 255.0;
-    const g = imageData.data[i * 4 + 1] / 255.0;
-    const b = imageData.data[i * 4 + 2] / 255.0;
-
-    rgbData[i] = r;
-    rgbData[canvas.height * canvas.width + i] = g;
-    rgbData[2 * canvas.height * canvas.width + i] = b;
-  }
-
-  const tensor = new ort.Tensor("float32", rgbData, [
-    1,
-    3,
-    canvas.height,
-    canvas.width,
-  ]);
-
-  const feeds = { images: tensor };
-  const output = await session.run(feeds);
-
-  const outputTensor = output["output0"];
-  const outputData = outputTensor.data as Float32Array;
-  const outputDims = outputTensor.dims as number[];
-
-  const numPredictions = outputDims[2];
-  const detections: Array<{
-    box: [number, number, number, number];
-    classId: number;
-    confidence: number;
-  }> = [];
-
-  for (let i = 0; i < numPredictions; i++) {
-    const cx = outputData[i];
-    const cy = outputData[numPredictions + i];
-    const w = outputData[2 * numPredictions + i];
-    const h = outputData[3 * numPredictions + i];
-
-    const class0Score = outputData[4 * numPredictions + i];
-    const class1Score = outputData[5 * numPredictions + i];
-    const class2Score = outputData[6 * numPredictions + i];
-
-    const scores = [class0Score, class1Score, class2Score];
-    const maxScore = Math.max(...scores);
-    const classId = scores.indexOf(maxScore);
-
-    if (maxScore > confidenceThreshold) {
-      detections.push({
-        box: [
-          cx / TARGET_SIZE,
-          cy / TARGET_SIZE,
-          w / TARGET_SIZE,
-          h / TARGET_SIZE,
-        ],
-        classId,
-        confidence: maxScore,
-      });
-    }
-  }
-
-  const nmsDetections = applyNonMaximumSuppression(detections, IOU_THRESHOLD);
-
-  const unsortedFields: DetectedField[] = nmsDetections.map((det) => {
-    const [cx, cy, w, h] = det.box;
-    const adjustedH = h * ADJUSTED_HEIGHT_FACTOR;
-    const x0 = cx - w / 2;
-    const y0 = cy + h / 2 - adjustedH;
-    return {
-      type: CLASS_NAMES[det.classId],
-      bbox: [x0, y0, w, adjustedH],
-      confidence: det.confidence,
-    };
-  });
-
-  const fields = sortFieldsByReadingOrder(unsortedFields);
-
-  drawDetections(canvas, fields);
+  const imageData = finalContext.getImageData(0, 0, TARGET_SIZE, TARGET_SIZE);
 
   return {
-    fields,
-    imageData: canvas.toDataURL(),
+    imageData,
     pdfMetadata: {
       originalWidth: viewport.width,
       originalHeight: viewport.height,
@@ -244,6 +157,7 @@ export const detectFormFields = async (
     const startTime = performance.now();
 
     onUpdateDetectionStatus("Loading PDF...");
+
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
@@ -257,26 +171,62 @@ export const detectFormFields = async (
       `Running form field detection using ${modelName} model...`
     );
 
-    const session = await ort.InferenceSession.create(modelPath, {
-      executionProviders: ["wasm"],
-    });
-
+    const worker = new InferenceWorker();
     const pages: PageDetectionData[] = [];
 
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      onUpdateDetectionStatus(
-        `Processing page ${pageNum} of ${pdf.numPages}...`
-      );
+      onUpdateDetectionStatus(`Processing page ${pageNum} of ${pdf.numPages}...`);
+
       const page = await pdf.getPage(pageNum);
-      const pageResult = await processPage(page, session, confidenceThreshold);
-      pages.push(pageResult);
+      const { imageData, pdfMetadata } = await renderPdfPageToImageData(page);
+
+      const inferenceResult = await new Promise<{
+        fields: DetectedField[];
+      }>((resolve, reject) => {
+        const messageHandler = (event: MessageEvent) => {
+          const { type, data } = event.data;
+
+          if (type === "result") {
+            worker.removeEventListener("message", messageHandler);
+            if (!data.success) {
+              reject(new Error(data.error.message));
+              return;
+            }
+            resolve({ fields: data.fields });
+          }
+        };
+
+        worker.addEventListener("message", messageHandler);
+
+        worker.postMessage({
+          imageDataArray: imageData.data,
+          imageWidth: imageData.width,
+          imageHeight: imageData.height,
+          modelPath,
+          confidenceThreshold,
+          isFirstPage: pageNum === 1,
+        });
+      });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = TARGET_SIZE;
+      canvas.height = TARGET_SIZE;
+      const ctx = canvas.getContext("2d")!;
+      ctx.putImageData(imageData, 0, 0);
+
+      drawDetections(canvas, inferenceResult.fields);
+
+      pages.push({
+        fields: inferenceResult.fields,
+        imageData: canvas.toDataURL(),
+        pdfMetadata,
+      });
     }
 
+    worker.terminate();
+
     const endTime = performance.now();
-    const totalFields = pages.reduce(
-      (sum, page) => sum + page.fields.length,
-      0
-    );
+    const totalFields = pages.reduce((sum, page) => sum + page.fields.length, 0);
 
     return {
       success: true,
