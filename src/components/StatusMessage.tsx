@@ -1,7 +1,9 @@
+import { ReactNode } from "react";
+
 type Status =
   | { type: "idle" }
   | { type: "loading"; message: string }
-  | { type: "error"; message: string };
+  | { type: "error"; message: ReactNode };
 
 interface StatusMessageProps {
   status: Status;
@@ -21,7 +23,7 @@ export function StatusMessage({ status }: StatusMessageProps) {
   if (status.type === "error") {
     return (
       <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-        <p className="text-red-800">{status.message}</p>
+        <div className="text-red-800">{status.message}</div>
       </div>
     );
   }
