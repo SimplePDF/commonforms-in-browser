@@ -11,9 +11,10 @@ interface ProcessingStepsProps {
   onDetect: () => void;
 }
 
-const EXAMPLE_PDF_URL =
-  "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf";
-const EXAMPLE_PDF_FILENAME = "cerfa_14571-05_LONG_SEJOUR_EN.pdf";
+const EXAMPLE_PDF = {
+  URL: "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf",
+  FILENAME: "cerfa_14571-05_LONG_SEJOUR_EN.pdf",
+};
 
 export const ProcessingSteps = ({
   pdfFile,
@@ -40,7 +41,7 @@ export const ProcessingSteps = ({
 
   const handleLoadExample = useCallback(async () => {
     try {
-      const fetchResponse = await fetch(EXAMPLE_PDF_URL);
+      const fetchResponse = await fetch(EXAMPLE_PDF.URL);
 
       if (!fetchResponse.ok) {
         console.error("Failed to fetch example PDF:", fetchResponse.statusText);
@@ -48,7 +49,7 @@ export const ProcessingSteps = ({
       }
 
       const pdfBlob = await fetchResponse.blob();
-      const exampleFile = new File([pdfBlob], EXAMPLE_PDF_FILENAME, {
+      const exampleFile = new File([pdfBlob], EXAMPLE_PDF.FILENAME, {
         type: "application/pdf",
       });
 
