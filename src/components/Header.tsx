@@ -12,7 +12,7 @@ export function Header() {
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
             <iframe
-              src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-in-browser&type=star&count=true&size=large"
+              src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-web&type=star&count=true&size=large"
               width="150"
               height="30"
               title="GitHub"
