@@ -119,7 +119,7 @@ export function ProcessingSteps({
                   : "bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer"
               }`}
             >
-              {isProcessing ? "Processing..." : "Detect Form Fields"}
+              {isProcessing ? "Processing..." : "Detect form fields"}
             </button>
           </div>
         </div>
@@ -141,7 +141,7 @@ export function ProcessingSteps({
                     : "bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer"
                 }`}
               >
-                Fill Form
+                Fill form
               </a>
             </EmbedPDF>
             <button
