@@ -127,6 +127,7 @@ export function FormFieldsDetection() {
       processingTime: detectionResult.data.processingTime,
       modelInfo: detectionResult.data.modelInfo,
       pdfWithAcroFieldsBlobUrl,
+      confidenceThreshold: modelConfiguration.confidenceThreshold,
     });
     setStatus({ type: "idle" });
   };

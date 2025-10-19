@@ -16,6 +16,7 @@ interface ProcessingResult {
   processingTime: number;
   modelInfo: string;
   pdfWithAcroFieldsBlobUrl: string;
+  confidenceThreshold: number;
 }
 
 interface DetectionResultsProps {
@@ -122,6 +123,10 @@ export function DetectionResults({ result }: DetectionResultsProps) {
           <div className="flex justify-between">
             <span className="text-gray-600">Total Pages:</span>
             <span className="font-semibold">{result.pages.length}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Confidence Threshold:</span>
+            <span className="font-semibold">{(result.confidenceThreshold * 100).toFixed(0)}%</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Fields Detected:</span>
