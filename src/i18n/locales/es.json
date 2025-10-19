@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Detección de campos de formularios PDF basada en navegador",
+    "subtitle": "Detecta automáticamente campos de formularios en PDFs con CommonForms usando ONNX Runtime Web",
+    "privacyFriendly": "Respetuoso con la privacidad",
+    "runsInBrowser": "Funciona en el navegador",
+    "aboutCommonForms": "Acerca de CommonForms",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> de <1>Joe Barrow</1> utiliza modelos FFDNet entrenados en un amplio conjunto de datos de formularios para detectar automáticamente cuadros de texto, casillas de verificación y campos de firma en documentos PDF.",
+    "howItWorks": "Cómo funciona",
+    "howItWorksBullet1": "Detección basada en YOLO con <0>ONNX Runtime</0>",
+    "howItWorksBullet2": "Detecta y añade los campos acrofields PDF relevantes",
+    "howItWorksBullet3": "Funciona completamente en el navegador",
+    "howItWorksBullet4": "Rellena o descarga el PDF resultante",
+    "arxivPaper": "Artículo arXiv"
+  },
+  "modelSelection": {
+    "selectModel": "Seleccionar modelo:",
+    "confidenceThreshold": "Umbral de confianza:"
+  },
+  "processingSteps": {
+    "step1": "Paso 1:",
+    "step1Title": "Cargar formulario PDF",
+    "step2": "Paso 2:",
+    "step2Title": "Detectar campos del formulario",
+    "step3": "Paso 3:",
+    "step3Title": "Rellenar o descargar",
+    "choosePdfForm": "Elegir formulario PDF",
+    "selectedFile": "Seleccionado: {{fileName}}",
+    "exampleButton": "Formulario CERFA de ejemplo",
+    "detectButton": "Detectar campos del formulario",
+    "processing": "Procesando...",
+    "fillForm": "Rellenar formulario",
+    "downloadPdf": "Descargar PDF rellenable"
+  },
+  "statusMessages": {
+    "loadingPdf": "Cargando PDF...",
+    "runningDetection": "Ejecutando detección de campos del formulario usando el modelo {{modelName}}...",
+    "processingPage": "Procesando página {{current}} de {{total}}...",
+    "applyingAcroFields": "Aplicando AcroFields al PDF..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Campos de formulario detectados",
+    "statistics": "Estadísticas",
+    "totalPages": "Páginas totales:",
+    "confidenceThresholdLabel": "Umbral de confianza:",
+    "fieldsDetected": "Campos detectados:",
+    "currentPage": "Página actual:",
+    "processingTime": "Tiempo de procesamiento:",
+    "pageOfTotal": "Página {{current}} de {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Por favor selecciona un archivo PDF válido",
+    "pdfEncryptedOrMalformed": "Este PDF está protegido con contraseña o está malformado. Si no está protegido con contraseña, intenta convertirlo primero a PDF/A en",
+    "pdfEncryptedNotAffiliated": "(no estamos afiliados con este servicio).",
+    "pdfProcessingFailed": "Error desconocido al procesar el PDF: {{errorMessage}}",
+    "detectionFailed": "Error al detectar campos del formulario: {{errorMessage}}",
+    "acroFieldsFailed": "Error al aplicar AcroFields: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "Este PDF ya contiene {{count}} campo rellenable. Si continúas, será reemplazado por los campos recién detectados.",
+    "pdfHasAcrofields_other": "Este PDF ya contiene {{count}} campos rellenables. Si continúas, serán reemplazados por los campos recién detectados."
+  }
+}

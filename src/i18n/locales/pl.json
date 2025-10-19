@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Wykrywanie pól formularzy PDF w przeglądarce",
+    "subtitle": "Automatycznie wykrywaj pola formularzy w plikach PDF za pomocą CommonForms wykorzystując ONNX Runtime Web",
+    "privacyFriendly": "Przyjazny dla prywatności",
+    "runsInBrowser": "Działa w przeglądarce",
+    "aboutCommonForms": "O CommonForms",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> autorstwa <1>Joe Barrow</1> wykorzystuje modele FFDNet wytrenowane na obszernym zbiorze danych formularzy do automatycznego wykrywania pól tekstowych, pól wyboru i pól podpisu w dokumentach PDF.",
+    "howItWorks": "Jak to działa",
+    "howItWorksBullet1": "Wykrywanie oparte na YOLO z <0>ONNX Runtime</0>",
+    "howItWorksBullet2": "Wykrywa i dodaje odpowiednie pola acrofields PDF",
+    "howItWorksBullet3": "Działa całkowicie w przeglądarce",
+    "howItWorksBullet4": "Wypełnij lub pobierz wynikowy PDF",
+    "arxivPaper": "Artykuł arXiv"
+  },
+  "modelSelection": {
+    "selectModel": "Wybierz model:",
+    "confidenceThreshold": "Próg pewności:"
+  },
+  "processingSteps": {
+    "step1": "Krok 1:",
+    "step1Title": "Prześlij formularz PDF",
+    "step2": "Krok 2:",
+    "step2Title": "Wykryj pola formularza",
+    "step3": "Krok 3:",
+    "step3Title": "Wypełnij lub pobierz",
+    "choosePdfForm": "Wybierz formularz PDF",
+    "selectedFile": "Wybrano: {{fileName}}",
+    "exampleButton": "Przykładowy formularz CERFA",
+    "detectButton": "Wykryj pola formularza",
+    "processing": "Przetwarzanie...",
+    "fillForm": "Wypełnij formularz",
+    "downloadPdf": "Pobierz wypełnialny PDF"
+  },
+  "statusMessages": {
+    "loadingPdf": "Ładowanie PDF...",
+    "runningDetection": "Uruchamianie wykrywania pól formularza przy użyciu modelu {{modelName}}...",
+    "processingPage": "Przetwarzanie strony {{current}} z {{total}}...",
+    "applyingAcroFields": "Stosowanie AcroFields do PDF..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Wykryte pola formularza",
+    "statistics": "Statystyki",
+    "totalPages": "Wszystkich stron:",
+    "confidenceThresholdLabel": "Próg pewności:",
+    "fieldsDetected": "Wykryte pola:",
+    "currentPage": "Bieżąca strona:",
+    "processingTime": "Czas przetwarzania:",
+    "pageOfTotal": "Strona {{current}} z {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Proszę wybrać prawidłowy plik PDF",
+    "pdfEncryptedOrMalformed": "Ten PDF jest chroniony hasłem lub uszkodzony. Jeśli nie jest chroniony hasłem, spróbuj najpierw przekonwertować go na PDF/A na",
+    "pdfEncryptedNotAffiliated": "(nie jesteśmy powiązani z tą usługą).",
+    "pdfProcessingFailed": "Nieznany błąd podczas przetwarzania PDF: {{errorMessage}}",
+    "detectionFailed": "Wykrywanie pól formularza nie powiodło się: {{errorMessage}}",
+    "acroFieldsFailed": "Stosowanie AcroFields nie powiodło się: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "Ten PDF zawiera już {{count}} pole do wypełnienia. Jeśli będziesz kontynuować, zostanie ono zastąpione nowo wykrytymi polami.",
+    "pdfHasAcrofields_other": "Ten PDF zawiera już {{count}} pól do wypełnienia. Jeśli będziesz kontynuować, zostaną one zastąpione nowo wykrytymi polami."
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Browsergebaseerde PDF-formuliervelddetectie",
+    "subtitle": "Detecteer automatisch formuliervelden in PDF's met CommonForms met behulp van ONNX Runtime Web",
+    "privacyFriendly": "Privacyvriendelijk",
+    "runsInBrowser": "Werkt in de browser",
+    "aboutCommonForms": "Over CommonForms",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> door <1>Joe Barrow</1> gebruikt FFDNet-modellen die zijn getraind op een grote dataset van formulieren om automatisch tekstvakken, selectievakjes en handtekeningvelden in PDF-documenten te detecteren.",
+    "howItWorks": "Hoe het werkt",
+    "howItWorksBullet1": "YOLO-gebaseerde detectie met <0>ONNX Runtime</0>",
+    "howItWorksBullet2": "Detecteert en voegt relevante PDF acrofields toe",
+    "howItWorksBullet3": "Werkt volledig in de browser",
+    "howItWorksBullet4": "Vul de resulterende PDF in of download deze",
+    "arxivPaper": "arXiv artikel"
+  },
+  "modelSelection": {
+    "selectModel": "Selecteer model:",
+    "confidenceThreshold": "Vertrouwensdrempel:"
+  },
+  "processingSteps": {
+    "step1": "Stap 1:",
+    "step1Title": "PDF-formulier uploaden",
+    "step2": "Stap 2:",
+    "step2Title": "Formuliervelden detecteren",
+    "step3": "Stap 3:",
+    "step3Title": "Invullen of downloaden",
+    "choosePdfForm": "Kies PDF-formulier",
+    "selectedFile": "Geselecteerd: {{fileName}}",
+    "exampleButton": "Voorbeeld CERFA-formulier",
+    "detectButton": "Formuliervelden detecteren",
+    "processing": "Verwerken...",
+    "fillForm": "Formulier invullen",
+    "downloadPdf": "Download invulbare PDF"
+  },
+  "statusMessages": {
+    "loadingPdf": "PDF laden...",
+    "runningDetection": "Formuliervelddetectie uitvoeren met model {{modelName}}...",
+    "processingPage": "Pagina {{current}} van {{total}} verwerken...",
+    "applyingAcroFields": "AcroFields toepassen op PDF..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Gedetecteerde formuliervelden",
+    "statistics": "Statistieken",
+    "totalPages": "Totaal aantal pagina's:",
+    "confidenceThresholdLabel": "Vertrouwensdrempel:",
+    "fieldsDetected": "Gedetecteerde velden:",
+    "currentPage": "Huidige pagina:",
+    "processingTime": "Verwerkingstijd:",
+    "pageOfTotal": "Pagina {{current}} van {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Selecteer een geldig PDF-bestand",
+    "pdfEncryptedOrMalformed": "Deze PDF is met een wachtwoord beveiligd of beschadigd. Als het niet met een wachtwoord is beveiligd, probeer het dan eerst te converteren naar PDF/A op",
+    "pdfEncryptedNotAffiliated": "(we zijn niet gelieerd aan deze dienst).",
+    "pdfProcessingFailed": "Onbekende fout bij het verwerken van PDF: {{errorMessage}}",
+    "detectionFailed": "Detectie van formuliervelden mislukt: {{errorMessage}}",
+    "acroFieldsFailed": "Toepassen van AcroFields mislukt: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "Deze PDF bevat al {{count}} invulbaar veld. Als u doorgaat, wordt dit vervangen door de nieuw gedetecteerde velden.",
+    "pdfHasAcrofields_other": "Deze PDF bevat al {{count}} invulbare velden. Als u doorgaat, worden deze vervangen door de nieuw gedetecteerde velden."
+  }
+}

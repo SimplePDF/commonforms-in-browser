@@ -1,18 +1,26 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import enTranslations from "./locales/en.json";
-import frTranslations from "./locales/fr.json";
 import deTranslations from "./locales/de.json";
-import ptTranslations from "./locales/pt.json";
+import enTranslations from "./locales/en.json";
+import esTranslations from "./locales/es.json";
+import etTranslations from "./locales/et.json";
+import frTranslations from "./locales/fr.json";
 import itTranslations from "./locales/it.json";
+import nlTranslations from "./locales/nl.json";
+import plTranslations from "./locales/pl.json";
+import ptTranslations from "./locales/pt.json";
 
 export const SUPPORTED_LANGUAGES = {
-  en: "English",
-  fr: "Français",
   de: "Deutsch",
-  pt: "Português",
+  en: "English",
+  es: "Español",
+  et: "Eesti",
+  fr: "Français",
   it: "Italiano",
+  nl: "Nederlands",
+  pl: "Polski",
+  pt: "Português",
 } as const;
 
 export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
@@ -36,11 +44,15 @@ const defaultLanguage = getStoredLanguage() ?? getBrowserLanguage();
 
 i18n.use(initReactI18next).init({
   resources: {
-    en: { translation: enTranslations },
-    fr: { translation: frTranslations },
     de: { translation: deTranslations },
-    pt: { translation: ptTranslations },
+    en: { translation: enTranslations },
+    es: { translation: esTranslations },
+    et: { translation: etTranslations },
+    fr: { translation: frTranslations },
     it: { translation: itTranslations },
+    nl: { translation: nlTranslations },
+    pl: { translation: plTranslations },
+    pt: { translation: ptTranslations },
   },
   lng: defaultLanguage,
   fallbackLng: "en",

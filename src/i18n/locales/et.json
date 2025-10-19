@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Brauserpõhine PDF-vormiväljade tuvastamine",
+    "subtitle": "Tuvastuslikus automaatselt vormivälju PDF-failides CommonForms abil kasutades ONNX Runtime Web",
+    "privacyFriendly": "Privaatsussõbralik",
+    "runsInBrowser": "Töötab brauseris",
+    "aboutCommonForms": "CommonFormsi kohta",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> autor <1>Joe Barrow</1> kasutab FFDNet mudeleid, mis on treenitud laialdase vormide andmekogumi põhjal, et automaatselt tuvastada tekstikaste, märkeruute ja allkirjavälju PDF-dokumentides.",
+    "howItWorks": "Kuidas see toimib",
+    "howItWorksBullet1": "YOLO-põhine tuvastus <0>ONNX Runtime</0> abil",
+    "howItWorksBullet2": "Tuvastab ja lisab asjakohased PDF acrofield väljad",
+    "howItWorksBullet3": "Töötab täielikult brauseris",
+    "howItWorksBullet4": "Täida või laadi alla tulemuseks olev PDF",
+    "arxivPaper": "arXiv artikkel"
+  },
+  "modelSelection": {
+    "selectModel": "Vali mudel:",
+    "confidenceThreshold": "Kindluse lävi:"
+  },
+  "processingSteps": {
+    "step1": "Samm 1:",
+    "step1Title": "Laadi üles PDF-vorm",
+    "step2": "Samm 2:",
+    "step2Title": "Tuvasta vormiväljad",
+    "step3": "Samm 3:",
+    "step3Title": "Täida või laadi alla",
+    "choosePdfForm": "Vali PDF-vorm",
+    "selectedFile": "Valitud: {{fileName}}",
+    "exampleButton": "CERFA vormi näide",
+    "detectButton": "Tuvasta vormiväljad",
+    "processing": "Töötlemine...",
+    "fillForm": "Täida vorm",
+    "downloadPdf": "Laadi alla täidetav PDF"
+  },
+  "statusMessages": {
+    "loadingPdf": "PDF-i laadimine...",
+    "runningDetection": "Vormiväljade tuvastamine mudeli {{modelName}} abil...",
+    "processingPage": "Lehe {{current}} töötlemine {{total}}-st...",
+    "applyingAcroFields": "AcroFieldsi rakendamine PDF-ile..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Tuvastatud vormiväljad",
+    "statistics": "Statistika",
+    "totalPages": "Lehekülgi kokku:",
+    "confidenceThresholdLabel": "Kindluse lävi:",
+    "fieldsDetected": "Tuvastatud väljad:",
+    "currentPage": "Praegune lehekülg:",
+    "processingTime": "Töötlemisaeg:",
+    "pageOfTotal": "Lehekülg {{current}} / {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Palun vali kehtiv PDF-fail",
+    "pdfEncryptedOrMalformed": "See PDF on parooliga kaitstud või vigane. Kui see ei ole parooliga kaitstud, proovi seda esmalt konverteerida PDF/A formaati aadressil",
+    "pdfEncryptedNotAffiliated": "(me ei ole selle teenusega seotud).",
+    "pdfProcessingFailed": "Tundmatu viga PDF-i töötlemisel: {{errorMessage}}",
+    "detectionFailed": "Vormiväljade tuvastamine ebaõnnestus: {{errorMessage}}",
+    "acroFieldsFailed": "AcroFieldsi rakendamine ebaõnnestus: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "See PDF sisaldab juba {{count}} täidetavat välja. Kui jätkad, asendatakse see äsja tuvastatud väljadega.",
+    "pdfHasAcrofields_other": "See PDF sisaldab juba {{count}} täidetavat välja. Kui jätkad, asendatakse need äsja tuvastatud väljadega."
+  }
+}
