@@ -77,7 +77,7 @@ export function ProcessingSteps({
               Upload PDF Form
             </span>
           </div>
-          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center hover:border-sky-500 transition-colors flex flex-col justify-start min-h-32">
+          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center hover:border-sky-500 transition-colors flex flex-col justify-start h-32">
             <input
               ref={fileInputRef}
               type="file"
@@ -88,9 +88,9 @@ export function ProcessingSteps({
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium text-sm cursor-pointer"
+                className="px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium text-sm cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap"
               >
-                Choose PDF Form
+                {pdfFile ? `Selected: ${pdfFile.name}` : "Choose PDF Form"}
               </button>
               <button
                 onClick={handleLoadExample}
@@ -99,11 +99,6 @@ export function ProcessingSteps({
                 CERFA form example
               </button>
             </div>
-            {pdfFile && (
-              <p className="mt-3 text-sm text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap px-2">
-                Selected: <span className="font-medium">{pdfFile.name}</span>
-              </p>
-            )}
           </div>
         </div>
 
@@ -114,7 +109,7 @@ export function ProcessingSteps({
               Detect Form Fields
             </span>
           </div>
-          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start min-h-32">
+          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 h-32">
             <button
               onClick={onDetect}
               disabled={!pdfFile || isProcessing}
@@ -136,7 +131,7 @@ export function ProcessingSteps({
               Fill Or Download
             </span>
           </div>
-          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 min-h-32">
+          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 h-32">
             <EmbedPDF>
               <a
                 href={pdfWithAcroFieldsBlobUrl ?? ""}
