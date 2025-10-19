@@ -1,13 +1,20 @@
 import { PDFDocument } from "pdf-lib";
 import { ReactNode } from "react";
 
-type PdfValidationErrorCode = "pdf_encrypted_or_malformed" | "pdf_processing_failed";
+type PdfValidationErrorCode =
+  | "pdf_encrypted_or_malformed"
+  | "pdf_processing_failed";
 
 type PdfValidationResult =
   | { success: true; data: null }
-  | { success: false; error: { code: PdfValidationErrorCode; message: ReactNode } };
+  | {
+      success: false;
+      error: { code: PdfValidationErrorCode; message: ReactNode };
+    };
 
-export const ensureValidPDF = async (pdfFile: File): Promise<PdfValidationResult> => {
+export const ensureValidPDF = async (
+  pdfFile: File
+): Promise<PdfValidationResult> => {
   try {
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdfDocument = await PDFDocument.load(arrayBuffer);
@@ -24,7 +31,8 @@ export const ensureValidPDF = async (pdfFile: File): Promise<PdfValidationResult
           code: "pdf_encrypted_or_malformed",
           message: (
             <>
-              This PDF is either encrypted or malformed. Try converting it to PDF/A first at{" "}
+              This PDF is either password-protected or malformed. If not
+              password protected, try converting it to PDF/A first at{" "}
               <a
                 href="https://tools.pdf24.org/en/pdf-to-pdfa"
                 target="_blank"
