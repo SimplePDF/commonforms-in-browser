@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useCallback } from "react";
 import { EmbedPDF } from "@simplepdf/react-embed-pdf";
 
 interface ProcessingStepsProps {
@@ -11,7 +11,11 @@ interface ProcessingStepsProps {
   onDetect: () => void;
 }
 
-export function ProcessingSteps({
+const EXAMPLE_PDF_URL =
+  "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf";
+const EXAMPLE_PDF_FILENAME = "cerfa_14571-05_LONG_SEJOUR_EN.pdf";
+
+export const ProcessingSteps = ({
   pdfFile,
   isProcessing,
   hasResult,
@@ -19,54 +23,63 @@ export function ProcessingSteps({
   fileInputRef,
   onFileSelect,
   onDetect,
-}: ProcessingStepsProps) {
-  const handleDownload = () => {
-    if (!pdfWithAcroFieldsBlobUrl || !pdfFile) {
+}: ProcessingStepsProps) => {
+  const handleDownload = useCallback(() => {
+    const canDownload = pdfWithAcroFieldsBlobUrl && pdfFile;
+    if (!canDownload) {
       return;
     }
 
-    const link = document.createElement("a");
-    link.href = pdfWithAcroFieldsBlobUrl;
-    link.download = pdfFile.name.replace(".pdf", "_with_fields.pdf");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    const downloadLink = document.createElement("a");
+    downloadLink.href = pdfWithAcroFieldsBlobUrl;
+    downloadLink.download = pdfFile.name.replace(".pdf", "_with_fields.pdf");
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }, [pdfWithAcroFieldsBlobUrl, pdfFile]);
 
-  const handleLoadExample = async () => {
+  const handleLoadExample = useCallback(async () => {
     try {
-      const response = await fetch(
-        "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf"
-      );
+      const fetchResponse = await fetch(EXAMPLE_PDF_URL);
 
-      if (!response.ok) {
-        console.error("Failed to fetch example PDF:", response.statusText);
+      if (!fetchResponse.ok) {
+        console.error("Failed to fetch example PDF:", fetchResponse.statusText);
         return;
       }
 
-      const blob = await response.blob();
-      const file = new File([blob], "cerfa_14571-05_LONG_SEJOUR_EN.pdf", {
+      const pdfBlob = await fetchResponse.blob();
+      const exampleFile = new File([pdfBlob], EXAMPLE_PDF_FILENAME, {
         type: "application/pdf",
       });
 
       const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
+      dataTransfer.items.add(exampleFile);
 
-      if (fileInputRef.current) {
-        fileInputRef.current.files = dataTransfer.files;
-
-        const event = new Event("change", { bubbles: true });
-        Object.defineProperty(event, "target", {
-          writable: false,
-          value: fileInputRef.current,
-        });
-
-        onFileSelect(event as unknown as React.ChangeEvent<HTMLInputElement>);
+      if (!fileInputRef.current) {
+        return;
       }
+
+      fileInputRef.current.files = dataTransfer.files;
+
+      const changeEvent = new Event("change", { bubbles: true });
+      Object.defineProperty(changeEvent, "target", {
+        writable: false,
+        value: fileInputRef.current,
+      });
+
+      onFileSelect(changeEvent as unknown as React.ChangeEvent<HTMLInputElement>);
     } catch (error) {
       console.error("Failed to load example PDF:", error);
     }
-  };
+  }, [fileInputRef, onFileSelect]);
+
+  const handleFileInputClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, [fileInputRef]);
+
+  const isDetectDisabled = !pdfFile || isProcessing;
+  const isResultDisabled = !hasResult || isProcessing;
+
   return (
     <>
       <div className="mb-6 md:mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -87,7 +100,7 @@ export function ProcessingSteps({
             />
             <div className="flex flex-col gap-2">
               <button
-                onClick={() => fileInputRef.current?.click()}
+                onClick={handleFileInputClick}
                 className="px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium text-sm cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap"
               >
                 {pdfFile ? `Selected: ${pdfFile.name}` : "Choose PDF Form"}
@@ -112,9 +125,9 @@ export function ProcessingSteps({
           <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 h-32">
             <button
               onClick={onDetect}
-              disabled={!pdfFile || isProcessing}
+              disabled={isDetectDisabled}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                !pdfFile || isProcessing
+                isDetectDisabled
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer"
               }`}
@@ -136,7 +149,7 @@ export function ProcessingSteps({
               <a
                 href={pdfWithAcroFieldsBlobUrl ?? ""}
                 className={`inline-block px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                  !hasResult || isProcessing
+                  isResultDisabled
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
                     : "bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer"
                 }`}
@@ -146,9 +159,9 @@ export function ProcessingSteps({
             </EmbedPDF>
             <button
               onClick={handleDownload}
-              disabled={!hasResult || isProcessing}
+              disabled={isResultDisabled}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                !hasResult || isProcessing
+                isResultDisabled
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-cyan-800 hover:bg-cyan-900 text-white cursor-pointer"
               }`}
