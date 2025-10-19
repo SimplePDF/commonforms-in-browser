@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Browser-basierte PDF-Formularfeld-Erkennung",
+    "subtitle": "Automatische Erkennung von Formularfeldern in PDFs mit CommonForms unter Verwendung von ONNX Runtime Web",
+    "privacyFriendly": "Datenschutzfreundlich",
+    "runsInBrowser": "Läuft im Browser",
+    "aboutCommonForms": "Über CommonForms",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> von <1>Joe Barrow</1> verwendet FFDNet-Modelle, die auf einem großen Datensatz von Formularen trainiert wurden, um automatisch Textfelder, Kontrollkästchen und Signaturfelder in PDF-Dokumenten zu erkennen.",
+    "howItWorks": "Wie es funktioniert",
+    "howItWorksBullet1": "YOLO-basierte Erkennung mit <0>ONNX Runtime</0>",
+    "howItWorksBullet2": "Erkennt und fügt die relevanten PDF-Acrofields hinzu",
+    "howItWorksBullet3": "Läuft vollständig im Browser",
+    "howItWorksBullet4": "Ausfüllen oder Herunterladen der resultierenden PDF",
+    "arxivPaper": "arXiv-Artikel"
+  },
+  "modelSelection": {
+    "selectModel": "Modell auswählen:",
+    "confidenceThreshold": "Konfidenzschwelle:"
+  },
+  "processingSteps": {
+    "step1": "Schritt 1:",
+    "step1Title": "PDF-Formular hochladen",
+    "step2": "Schritt 2:",
+    "step2Title": "Formularfelder erkennen",
+    "step3": "Schritt 3:",
+    "step3Title": "Ausfüllen oder herunterladen",
+    "choosePdfForm": "PDF-Formular auswählen",
+    "selectedFile": "Ausgewählt: {{fileName}}",
+    "exampleButton": "CERFA-Formular-Beispiel",
+    "detectButton": "Formularfelder erkennen",
+    "processing": "Verarbeitung läuft...",
+    "fillForm": "Formular ausfüllen",
+    "downloadPdf": "Ausfüllbares PDF herunterladen"
+  },
+  "statusMessages": {
+    "loadingPdf": "PDF wird geladen...",
+    "runningDetection": "Formularfeld-Erkennung mit {{modelName}}-Modell wird ausgeführt...",
+    "processingPage": "Verarbeitung von Seite {{current}} von {{total}}...",
+    "applyingAcroFields": "AcroFields werden auf PDF angewendet..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Erkannte Formularfelder",
+    "statistics": "Statistiken",
+    "totalPages": "Gesamtseiten:",
+    "confidenceThresholdLabel": "Konfidenzschwelle:",
+    "fieldsDetected": "Erkannte Felder:",
+    "currentPage": "Aktuelle Seite:",
+    "processingTime": "Verarbeitungszeit:",
+    "pageOfTotal": "Seite {{current}} von {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Bitte wählen Sie eine gültige PDF-Datei aus",
+    "pdfEncryptedOrMalformed": "Dieses PDF ist entweder passwortgeschützt oder fehlerhaft. Falls nicht passwortgeschützt, versuchen Sie es zunächst in PDF/A zu konvertieren auf",
+    "pdfEncryptedNotAffiliated": "(wir sind mit diesem Dienst nicht verbunden).",
+    "pdfProcessingFailed": "Unbekannter Fehler beim Verarbeiten des PDFs: {{errorMessage}}",
+    "detectionFailed": "Formularfeld-Erkennung fehlgeschlagen: {{errorMessage}}",
+    "acroFieldsFailed": "Anwendung der AcroFields fehlgeschlagen: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "Dieses PDF enthält bereits {{count}} ausfüllbares Feld. Wenn Sie fortfahren, wird es durch die neu erkannten Felder ersetzt.",
+    "pdfHasAcrofields_other": "Dieses PDF enthält bereits {{count}} ausfüllbare Felder. Wenn Sie fortfahren, werden sie durch die neu erkannten Felder ersetzt."
+  }
+}

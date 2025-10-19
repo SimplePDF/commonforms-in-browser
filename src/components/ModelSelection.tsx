@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 type ModelType = "FFDNet-S" | "FFDNet-L";
 
 interface ModelOption {
@@ -20,12 +22,14 @@ export function ModelSelection({
   confidenceThreshold,
   onChangeConfidenceThreshold,
 }: ModelSelectionProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="mb-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Model:
+            {t("modelSelection.selectModel")}
           </label>
           <select
             value={selectedModel}
@@ -41,7 +45,7 @@ export function ModelSelection({
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Confidence Threshold: {confidenceThreshold.toFixed(1)}
+            {t("modelSelection.confidenceThreshold")} {confidenceThreshold.toFixed(1)}
           </label>
           <div className="flex items-center h-10">
             <input

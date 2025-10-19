@@ -29,11 +29,16 @@ interface DetectionData {
   modelInfo: string;
 }
 
+export type DetectionStatusUpdate =
+  | { type: "loading_pdf" }
+  | { type: "running_detection"; modelName: string }
+  | { type: "processing_page"; current: number; total: number };
+
 export interface DetectionParameters {
   pdfFile: File;
   modelPath: string;
   confidenceThreshold: number;
-  onUpdateDetectionStatus: (message: string) => void;
+  onUpdateDetectionStatus: (status: DetectionStatusUpdate) => void;
 }
 
 type ErrorCode =
@@ -156,7 +161,7 @@ export const detectFormFields = async (
   try {
     const startTime = performance.now();
 
-    onUpdateDetectionStatus("Loading PDF...");
+    onUpdateDetectionStatus({ type: "loading_pdf" });
 
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -167,15 +172,20 @@ export const detectFormFields = async (
         ? "FFDNet-S"
         : "model";
 
-    onUpdateDetectionStatus(
-      `Running form field detection using ${modelName} model...`
-    );
+    onUpdateDetectionStatus({
+      type: "running_detection",
+      modelName,
+    });
 
     const worker = new InferenceWorker();
     const pages: PageDetectionData[] = [];
 
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      onUpdateDetectionStatus(`Processing page ${pageNum} of ${pdf.numPages}...`);
+      onUpdateDetectionStatus({
+        type: "processing_page",
+        current: pageNum,
+        total: pdf.numPages,
+      });
 
       const page = await pdf.getPage(pageNum);
       const { imageData, pdfMetadata } = await renderPdfPageToImageData(page);

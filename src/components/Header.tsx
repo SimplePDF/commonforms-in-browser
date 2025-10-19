@@ -1,21 +1,27 @@
+import { useTranslation, Trans } from "react-i18next";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+
 export function Header() {
+  const { t } = useTranslation();
+
   return (
     <>
-      {/* Header */}
       <div className="mb-6 md:mb-8">
         <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-          <span>Browser-based PDF form fields detection</span>
-          <iframe
-            src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-in-browser&type=star&count=true&size=large"
-            width="150"
-            height="30"
-            title="GitHub"
-            className="shrink-0"
-          ></iframe>
+          <span>{t("header.title")}</span>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <iframe
+              src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-in-browser&type=star&count=true&size=large"
+              width="150"
+              height="30"
+              title="GitHub"
+              className="shrink-0"
+            ></iframe>
+          </div>
         </h1>
         <p className="text-gray-600 text-base md:text-lg">
-          Automatically detect form fields in PDFs with CommonForms using ONNX
-          Runtime Web
+          {t("header.subtitle")}
         </p>
         <div className="flex flex-wrap gap-2 mt-4">
           <a
@@ -35,7 +41,7 @@ export function Header() {
             ONNX Runtime Web
           </a>
           <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium border border-indigo-200">
-            Runs in Browser
+            {t("header.runsInBrowser")}
           </span>
           <a
             href="https://simplepdf.com"
@@ -58,38 +64,38 @@ export function Header() {
               textShadow: "0 1px 2px oklch(70% 0.117 11.638)",
             }}
           >
-            Privacy-friendly
+            {t("header.privacyFriendly")}
           </span>
         </div>
       </div>
 
-      {/* Info Sections */}
       <div className="grid md:grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
         <div className="p-3 bg-sky-50 rounded-lg border border-sky-200">
           <h3 className="text-lg font-semibold text-sky-900 mb-2">
-            About CommonForms
+            {t("header.aboutCommonForms")}
           </h3>
           <p className="text-sky-800 text-sm">
-            <a
-              href="https://github.com/jbarrow/commonforms"
-              className="text-sky-900 hover:text-sky-700 underline font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              CommonForms
-            </a>{" "}
-            by{" "}
-            <a
-              href="https://x.com/barrowjoseph"
-              className="text-sky-900 hover:text-sky-700 underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Joe Barrow
-            </a>{" "}
-            uses FFDNet models trained on a large dataset of forms to
-            automatically detect text boxes, checkboxes, and signature fields in
-            PDF documents.
+            <Trans
+              i18nKey="header.aboutCommonFormsDescription"
+              components={{
+                0: (
+                  <a
+                    href="https://github.com/jbarrow/commonforms"
+                    className="text-sky-900 hover:text-sky-700 underline font-medium"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+                1: (
+                  <a
+                    href="https://x.com/barrowjoseph"
+                    className="text-sky-900 hover:text-sky-700 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+              }}
+            />
           </p>
           <a
             href="https://arxiv.org/abs/2509.16506"
@@ -97,29 +103,34 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Arxiv paper
+            {t("header.arxivPaper")}
           </a>
         </div>
 
         <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
           <h3 className="text-lg font-semibold text-emerald-900 mb-2">
-            How it works
+            {t("header.howItWorks")}
           </h3>
           <ul className="text-emerald-800 text-sm space-y-1">
             <li>
-              • YOLO-based detection with{" "}
-              <a
-                href="https://onnxruntime.ai/"
-                className="text-emerald-900 hover:text-emerald-700 underline font-medium"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ONNX Runtime
-              </a>
+              •{" "}
+              <Trans
+                i18nKey="header.howItWorksBullet1"
+                components={{
+                  0: (
+                    <a
+                      href="https://onnxruntime.ai/"
+                      className="text-emerald-900 hover:text-emerald-700 underline font-medium"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  ),
+                }}
+              />
             </li>
-            <li>• Detect and add the relevant PDF acrofields</li>
-            <li>• Runs entirely in the browser</li>
-            <li>• Fill or download or the resulting PDF</li>
+            <li>• {t("header.howItWorksBullet2")}</li>
+            <li>• {t("header.howItWorksBullet3")}</li>
+            <li>• {t("header.howItWorksBullet4")}</li>
           </ul>
         </div>
       </div>

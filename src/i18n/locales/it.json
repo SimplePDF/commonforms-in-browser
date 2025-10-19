@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Rilevamento dei campi dei moduli PDF basato su browser",
+    "subtitle": "Rileva automaticamente i campi dei moduli nei PDF con CommonForms utilizzando ONNX Runtime Web",
+    "privacyFriendly": "Rispettoso della privacy",
+    "runsInBrowser": "Funziona nel browser",
+    "aboutCommonForms": "Informazioni su CommonForms",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> di <1>Joe Barrow</1> utilizza modelli FFDNet addestrati su un ampio set di dati di moduli per rilevare automaticamente caselle di testo, caselle di controllo e campi per la firma nei documenti PDF.",
+    "howItWorks": "Come funziona",
+    "howItWorksBullet1": "Rilevamento basato su YOLO con <0>ONNX Runtime</0>",
+    "howItWorksBullet2": "Rileva e aggiunge i campi acrofields PDF pertinenti",
+    "howItWorksBullet3": "Funziona interamente nel browser",
+    "howItWorksBullet4": "Compilare o scaricare il PDF risultante",
+    "arxivPaper": "Articolo arXiv"
+  },
+  "modelSelection": {
+    "selectModel": "Seleziona modello:",
+    "confidenceThreshold": "Soglia di confidenza:"
+  },
+  "processingSteps": {
+    "step1": "Passaggio 1:",
+    "step1Title": "Carica modulo PDF",
+    "step2": "Passaggio 2:",
+    "step2Title": "Rileva campi del modulo",
+    "step3": "Passaggio 3:",
+    "step3Title": "Compila o scarica",
+    "choosePdfForm": "Scegli modulo PDF",
+    "selectedFile": "Selezionato: {{fileName}}",
+    "exampleButton": "Esempio di modulo CERFA",
+    "detectButton": "Rileva campi del modulo",
+    "processing": "Elaborazione in corso...",
+    "fillForm": "Compila modulo",
+    "downloadPdf": "Scarica PDF compilabile"
+  },
+  "statusMessages": {
+    "loadingPdf": "Caricamento PDF...",
+    "runningDetection": "Esecuzione del rilevamento dei campi del modulo utilizzando il modello {{modelName}}...",
+    "processingPage": "Elaborazione pagina {{current}} di {{total}}...",
+    "applyingAcroFields": "Applicazione di AcroFields al PDF..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Campi del modulo rilevati",
+    "statistics": "Statistiche",
+    "totalPages": "Pagine totali:",
+    "confidenceThresholdLabel": "Soglia di confidenza:",
+    "fieldsDetected": "Campi rilevati:",
+    "currentPage": "Pagina corrente:",
+    "processingTime": "Tempo di elaborazione:",
+    "pageOfTotal": "Pagina {{current}} di {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Seleziona un file PDF valido",
+    "pdfEncryptedOrMalformed": "Questo PDF è protetto da password o malformato. Se non è protetto da password, prova prima a convertirlo in PDF/A su",
+    "pdfEncryptedNotAffiliated": "(non siamo affiliati con questo servizio).",
+    "pdfProcessingFailed": "Errore sconosciuto durante l'elaborazione del PDF: {{errorMessage}}",
+    "detectionFailed": "Rilevamento dei campi del modulo fallito: {{errorMessage}}",
+    "acroFieldsFailed": "Applicazione di AcroFields fallita: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "Questo PDF contiene già {{count}} campo compilabile. Se procedi, verrà sostituito con i campi appena rilevati.",
+    "pdfHasAcrofields_other": "Questo PDF contiene già {{count}} campi compilabili. Se procedi, verranno sostituiti con i campi appena rilevati."
+  }
+}

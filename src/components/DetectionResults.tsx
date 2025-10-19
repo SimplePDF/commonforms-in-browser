@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface DetectedField {
   type: string;
@@ -24,6 +25,7 @@ interface DetectionResultsProps {
 }
 
 export function DetectionResults({ result }: DetectionResultsProps) {
+  const { t } = useTranslation();
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   if (!result) {
@@ -49,7 +51,7 @@ export function DetectionResults({ result }: DetectionResultsProps) {
       {/* Visualization */}
       <div className="col-span-1 md:col-span-3">
         <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-          Detected Form Fields
+          {t("detectionResults.detectedFormFields")}
         </h2>
         <img
           src={currentPage.imageData}
@@ -98,7 +100,7 @@ export function DetectionResults({ result }: DetectionResultsProps) {
                 ←
               </button>
               <span className="text-sm font-medium">
-                Page {currentPageIndex + 1} of {result.pages.length}
+                {t("detectionResults.pageOfTotal", { current: currentPageIndex + 1, total: result.pages.length })}
               </span>
               <button
                 onClick={handleNextPage}
@@ -118,26 +120,26 @@ export function DetectionResults({ result }: DetectionResultsProps) {
 
       {/* Statistics */}
       <div className="col-span-1 md:col-span-1">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{t("detectionResults.statistics")}</h2>
         <div className="bg-gray-50 rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total Pages:</span>
+            <span className="text-gray-600">{t("detectionResults.totalPages")}</span>
             <span className="font-semibold">{result.pages.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Confidence Threshold:</span>
+            <span className="text-gray-600">{t("detectionResults.confidenceThresholdLabel")}</span>
             <span className="font-semibold">{(result.confidenceThreshold * 100).toFixed(0)}%</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Fields Detected:</span>
+            <span className="text-gray-600">{t("detectionResults.fieldsDetected")}</span>
             <span className="font-semibold">{totalFields}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Current Page:</span>
+            <span className="text-gray-600">{t("detectionResults.currentPage")}</span>
             <span className="font-semibold">{currentPage.fields.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Processing Time:</span>
+            <span className="text-gray-600">{t("detectionResults.processingTime")}</span>
             <span className="font-semibold text-emerald-600">
               {result.processingTime.toFixed(0)}ms
             </span>

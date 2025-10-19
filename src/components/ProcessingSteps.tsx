@@ -1,4 +1,5 @@
 import { RefObject, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { EmbedPDF } from "@simplepdf/react-embed-pdf";
 
 interface ProcessingStepsProps {
@@ -25,6 +26,19 @@ export const ProcessingSteps = ({
   onFileSelect,
   onDetect,
 }: ProcessingStepsProps) => {
+  const { t, i18n } = useTranslation();
+
+  const embedPdfLocale = ((): "en" | "de" | "es" | "fr" | "it" | "pt" => {
+    const currentLanguage = i18n.language;
+    const supportedLocales = ["en", "de", "es", "fr", "it", "pt"] as const;
+
+    if (supportedLocales.includes(currentLanguage as typeof supportedLocales[number])) {
+      return currentLanguage as "en" | "de" | "es" | "fr" | "it" | "pt";
+    }
+
+    return "en";
+  })();
+
   const handleDownload = useCallback(() => {
     const canDownload = pdfWithAcroFieldsBlobUrl && pdfFile;
     if (!canDownload) {
@@ -86,9 +100,9 @@ export const ProcessingSteps = ({
       <div className="mb-6 md:mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <div>
           <div className="mb-3">
-            <span className="text-lg md:text-2xl font-bold text-gray-900">Step 1:</span>
+            <span className="text-lg md:text-2xl font-bold text-gray-900">{t("processingSteps.step1")}</span>
             <span className="text-base md:text-xl font-semibold text-gray-700 ml-2">
-              Upload PDF Form
+              {t("processingSteps.step1Title")}
             </span>
           </div>
           <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center hover:border-sky-500 transition-colors flex flex-col justify-start h-32">
@@ -104,13 +118,13 @@ export const ProcessingSteps = ({
                 onClick={handleFileInputClick}
                 className="px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium text-sm cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap"
               >
-                {pdfFile ? `Selected: ${pdfFile.name}` : "Choose PDF Form"}
+                {pdfFile ? t("processingSteps.selectedFile", { fileName: pdfFile.name }) : t("processingSteps.choosePdfForm")}
               </button>
               <button
                 onClick={handleLoadExample}
                 className="px-4 py-2 bg-sky-100 text-sky-700 rounded-lg hover:bg-sky-200 transition-colors font-medium text-sm border border-sky-300 cursor-pointer"
               >
-                CERFA form example
+                {t("processingSteps.exampleButton")}
               </button>
             </div>
           </div>
@@ -118,9 +132,9 @@ export const ProcessingSteps = ({
 
         <div>
           <div className="mb-3">
-            <span className="text-lg md:text-2xl font-bold text-gray-900">Step 2:</span>
+            <span className="text-lg md:text-2xl font-bold text-gray-900">{t("processingSteps.step2")}</span>
             <span className="text-base md:text-xl font-semibold text-gray-700 ml-2">
-              Detect Form Fields
+              {t("processingSteps.step2Title")}
             </span>
           </div>
           <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 h-32">
@@ -133,20 +147,20 @@ export const ProcessingSteps = ({
                   : "bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer"
               }`}
             >
-              {isProcessing ? "Processing..." : "Detect form fields"}
+              {isProcessing ? t("processingSteps.processing") : t("processingSteps.detectButton")}
             </button>
           </div>
         </div>
 
         <div>
           <div className="mb-3">
-            <span className="text-lg md:text-2xl font-bold text-gray-900">Step 3:</span>
+            <span className="text-lg md:text-2xl font-bold text-gray-900">{t("processingSteps.step3")}</span>
             <span className="text-base md:text-xl font-semibold text-gray-700 ml-2">
-              Fill Or Download
+              {t("processingSteps.step3Title")}
             </span>
           </div>
           <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 h-32">
-            <EmbedPDF>
+            <EmbedPDF locale={embedPdfLocale}>
               <a
                 href={pdfWithAcroFieldsBlobUrl ?? ""}
                 className={`inline-block px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
@@ -155,7 +169,7 @@ export const ProcessingSteps = ({
                     : "bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer"
                 }`}
               >
-                Fill form
+                {t("processingSteps.fillForm")}
               </a>
             </EmbedPDF>
             <button
@@ -167,7 +181,7 @@ export const ProcessingSteps = ({
                   : "bg-cyan-800 hover:bg-cyan-900 text-white cursor-pointer"
               }`}
             >
-              Download fillable PDF
+              {t("processingSteps.downloadPdf")}
             </button>
           </div>
         </div>

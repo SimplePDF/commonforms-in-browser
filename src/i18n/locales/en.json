@@ -1,0 +1,63 @@
+{
+  "header": {
+    "title": "Browser-based PDF form fields detection",
+    "subtitle": "Automatically detect form fields in PDFs with CommonForms using ONNX Runtime Web",
+    "privacyFriendly": "Privacy-friendly",
+    "runsInBrowser": "Runs in Browser",
+    "aboutCommonForms": "About CommonForms",
+    "aboutCommonFormsDescription": "<0>CommonForms</0> by <1>Joe Barrow</1> uses FFDNet models trained on a large dataset of forms to automatically detect text boxes, checkboxes, and signature fields in PDF documents.",
+    "howItWorks": "How it works",
+    "howItWorksBullet1": "YOLO-based detection with <0>ONNX Runtime</0>",
+    "howItWorksBullet2": "Detect and add the relevant PDF acrofields",
+    "howItWorksBullet3": "Runs entirely in the browser",
+    "howItWorksBullet4": "Fill or download or the resulting PDF",
+    "arxivPaper": "arXiv paper"
+  },
+  "modelSelection": {
+    "selectModel": "Select Model:",
+    "confidenceThreshold": "Confidence Threshold:"
+  },
+  "processingSteps": {
+    "step1": "Step 1:",
+    "step1Title": "Upload PDF Form",
+    "step2": "Step 2:",
+    "step2Title": "Detect Form Fields",
+    "step3": "Step 3:",
+    "step3Title": "Fill Or Download",
+    "choosePdfForm": "Choose PDF Form",
+    "selectedFile": "Selected: {{fileName}}",
+    "exampleButton": "CERFA form example",
+    "detectButton": "Detect form fields",
+    "processing": "Processing...",
+    "fillForm": "Fill form",
+    "downloadPdf": "Download fillable PDF"
+  },
+  "statusMessages": {
+    "loadingPdf": "Loading PDF...",
+    "runningDetection": "Running form field detection using {{modelName}} model...",
+    "processingPage": "Processing page {{current}} of {{total}}...",
+    "applyingAcroFields": "Applying AcroFields to PDF..."
+  },
+  "detectionResults": {
+    "detectedFormFields": "Detected Form Fields",
+    "statistics": "Statistics",
+    "totalPages": "Total Pages:",
+    "confidenceThresholdLabel": "Confidence Threshold:",
+    "fieldsDetected": "Fields Detected:",
+    "currentPage": "Current Page:",
+    "processingTime": "Processing Time:",
+    "pageOfTotal": "Page {{current}} of {{total}}"
+  },
+  "errors": {
+    "invalidPdfFile": "Please select a valid PDF file",
+    "pdfEncryptedOrMalformed": "This PDF is either password-protected or malformed. If not password protected, try converting it to PDF/A first at",
+    "pdfEncryptedNotAffiliated": "(we are not affiliated with this service).",
+    "pdfProcessingFailed": "Unknown error when processing the PDF: {{errorMessage}}",
+    "detectionFailed": "Failed to detect form fields: {{errorMessage}}",
+    "acroFieldsFailed": "Failed to apply AcroFields: {{errorMessage}}"
+  },
+  "warnings": {
+    "pdfHasAcrofields": "This PDF already contains {{count}} fillable field. If you proceed, these will be replaced with the newly detected fields.",
+    "pdfHasAcrofields_other": "This PDF already contains {{count}} fillable fields. If you proceed, these will be replaced with the newly detected fields."
+  }
+}

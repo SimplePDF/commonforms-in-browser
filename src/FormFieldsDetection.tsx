@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import * as ort from "onnxruntime-web";
 import * as pdfjsLib from "pdfjs-dist";
 import { detectFormFields } from "./lib/formFieldDetection";
@@ -45,6 +46,7 @@ interface PdfFileState {
 }
 
 export function FormFieldsDetection() {
+  const { t } = useTranslation();
   const [pdfFile, setPdfFile] = useState<PdfFileState | null>(null);
   const [modelConfiguration, setModelConfiguration] =
     useState<ModelConfiguration>({
@@ -62,17 +64,41 @@ export function FormFieldsDetection() {
     const file = event.target.files?.[0];
 
     if (!file || file.type !== "application/pdf") {
-      setStatus({ type: "error", message: "Please select a valid PDF file" });
+      setStatus({ type: "error", message: t("errors.invalidPdfFile") });
       return;
     }
 
     const validationResult = await ensureValidPDF(file);
 
     if (!validationResult.success) {
-      setStatus({
-        type: "error",
-        message: validationResult.error.message,
-      });
+      const errorCode = validationResult.error.code;
+
+      if (errorCode === "pdf_encrypted_or_malformed") {
+        setStatus({
+          type: "error",
+          message: (
+            <>
+              {t("errors.pdfEncryptedOrMalformed")}{" "}
+              <a
+                href="https://tools.pdf24.org/en/pdf-to-pdfa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-red-900"
+              >
+                tools.pdf24.org
+              </a>{" "}
+              {t("errors.pdfEncryptedNotAffiliated")}
+            </>
+          ),
+        });
+      } else {
+        setStatus({
+          type: "error",
+          message: t("errors.pdfProcessingFailed", {
+            errorMessage: validationResult.error.errorMessage || "Unknown error",
+          }),
+        });
+      }
       return;
     }
 
@@ -84,7 +110,9 @@ export function FormFieldsDetection() {
     if (validationResult.data.warning) {
       setStatus({
         type: "warning",
-        message: validationResult.data.warning.message,
+        message: t("warnings.pdfHasAcrofields", {
+          count: validationResult.data.warning.fieldsCount,
+        }),
       });
     } else {
       setStatus({ type: "idle" });
@@ -102,20 +130,38 @@ export function FormFieldsDetection() {
       pdfFile: pdfFile.file,
       modelPath: MODEL_URLS[modelConfiguration.selectedModel],
       confidenceThreshold: modelConfiguration.confidenceThreshold,
-      onUpdateDetectionStatus: (message) => {
-        setStatus({ type: "loading", message });
+      onUpdateDetectionStatus: (status) => {
+        const translatedMessage = ((): string => {
+          switch (status.type) {
+            case "loading_pdf":
+              return t("statusMessages.loadingPdf");
+            case "running_detection":
+              return t("statusMessages.runningDetection", {
+                modelName: status.modelName,
+              });
+            case "processing_page":
+              return t("statusMessages.processingPage", {
+                current: status.current,
+                total: status.total,
+              });
+          }
+        })();
+
+        setStatus({ type: "loading", message: translatedMessage });
       },
     });
 
     if (!detectionResult.success) {
       setStatus({
         type: "error",
-        message: detectionResult.error.message,
+        message: t("errors.detectionFailed", {
+          errorMessage: detectionResult.error.message,
+        }),
       });
       return;
     }
 
-    setStatus({ type: "loading", message: "Applying AcroFields to PDF..." });
+    setStatus({ type: "loading", message: t("statusMessages.applyingAcroFields") });
 
     const acroFieldsResult = await applyAcroFields({
       pdfFile: pdfFile.file,
@@ -126,7 +172,9 @@ export function FormFieldsDetection() {
     if (!acroFieldsResult.success) {
       setStatus({
         type: "error",
-        message: acroFieldsResult.error.message,
+        message: t("errors.acroFieldsFailed", {
+          errorMessage: acroFieldsResult.error.message,
+        }),
       });
       return;
     }
