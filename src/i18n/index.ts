@@ -21,9 +21,7 @@ const STORAGE_KEY = "commonforms-language";
 
 const getBrowserLanguage = (): SupportedLanguage => {
   const browserLang = navigator.language.split("-")[0];
-  return Object.keys(SUPPORTED_LANGUAGES).includes(browserLang)
-    ? (browserLang as SupportedLanguage)
-    : "en";
+  return Object.keys(SUPPORTED_LANGUAGES).includes(browserLang) ? (browserLang as SupportedLanguage) : "en";
 };
 
 const getStoredLanguage = (): SupportedLanguage | null => {

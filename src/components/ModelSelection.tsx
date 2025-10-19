@@ -28,9 +28,7 @@ export function ModelSelection({
     <div className="mb-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("modelSelection.selectModel")}
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">{t("modelSelection.selectModel")}</label>
           <select
             value={selectedModel}
             onChange={(e) => onSelectModel(e.target.value as ModelType)}

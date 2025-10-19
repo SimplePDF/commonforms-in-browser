@@ -32,7 +32,7 @@ export const ProcessingSteps = ({
     const currentLanguage = i18n.language;
     const supportedLocales = ["en", "de", "es", "fr", "it", "pt"] as const;
 
-    if (supportedLocales.includes(currentLanguage as typeof supportedLocales[number])) {
+    if (supportedLocales.includes(currentLanguage as (typeof supportedLocales)[number])) {
       return currentLanguage as "en" | "de" | "es" | "fr" | "it" | "pt";
     }
 
@@ -106,19 +106,17 @@ export const ProcessingSteps = ({
             </span>
           </div>
           <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center hover:border-sky-500 transition-colors flex flex-col justify-start h-32">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="application/pdf"
-              onChange={onFileSelect}
-              className="hidden"
-            />
+            <input ref={fileInputRef} type="file" accept="application/pdf" onChange={onFileSelect} className="hidden" />
             <div className="flex flex-col gap-2">
               <button
                 onClick={handleFileInputClick}
                 className="px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium text-sm cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap"
               >
-                {pdfFile ? t("processingSteps.selectedFile", { fileName: pdfFile.name }) : t("processingSteps.choosePdfForm")}
+                {pdfFile
+                  ? t("processingSteps.selectedFile", {
+                      fileName: pdfFile.name,
+                    })
+                  : t("processingSteps.choosePdfForm")}
               </button>
               <button
                 onClick={handleLoadExample}
@@ -188,4 +186,4 @@ export const ProcessingSteps = ({
       </div>
     </>
   );
-}
+};

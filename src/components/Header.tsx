@@ -20,9 +20,7 @@ export function Header() {
             ></iframe>
           </div>
         </h1>
-        <p className="text-gray-600 text-base md:text-lg">
-          {t("header.subtitle")}
-        </p>
+        <p className="text-gray-600 text-base md:text-lg">{t("header.subtitle")}</p>
         <div className="flex flex-wrap gap-2 mt-4">
           <a
             href="https://github.com/jbarrow/commonforms"
@@ -71,9 +69,7 @@ export function Header() {
 
       <div className="grid md:grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
         <div className="p-3 bg-sky-50 rounded-lg border border-sky-200">
-          <h3 className="text-lg font-semibold text-sky-900 mb-2">
-            {t("header.aboutCommonForms")}
-          </h3>
+          <h3 className="text-lg font-semibold text-sky-900 mb-2">{t("header.aboutCommonForms")}</h3>
           <p className="text-sky-800 text-sm">
             <Trans
               i18nKey="header.aboutCommonFormsDescription"
@@ -108,9 +104,7 @@ export function Header() {
         </div>
 
         <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-          <h3 className="text-lg font-semibold text-emerald-900 mb-2">
-            {t("header.howItWorks")}
-          </h3>
+          <h3 className="text-lg font-semibold text-emerald-900 mb-2">{t("header.howItWorks")}</h3>
           <ul className="text-emerald-800 text-sm space-y-1">
             <li>
               •{" "}

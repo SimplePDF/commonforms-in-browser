@@ -1,8 +1,7 @@
 import * as ort from "onnxruntime-web";
 import { applyNonMaximumSuppression } from "../lib/utils";
 
-ort.env.wasm.wasmPaths =
-  "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/";
+ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/";
 
 const CLASS_NAMES = ["TextBox", "ChoiceButton", "Signature"];
 const IOU_THRESHOLD = 0.45;
@@ -73,12 +72,7 @@ const runInference = async (
     rgbData[2 * imageWidth * imageHeight + i] = b;
   }
 
-  const tensor = new ort.Tensor("float32", rgbData, [
-    1,
-    3,
-    imageWidth,
-    imageHeight,
-  ]);
+  const tensor = new ort.Tensor("float32", rgbData, [1, 3, imageWidth, imageHeight]);
 
   const feeds = { images: tensor };
   const output = await cachedSession.run(feeds);
@@ -110,12 +104,7 @@ const runInference = async (
 
     if (maxScore > confidenceThreshold) {
       detections.push({
-        box: [
-          cx / TARGET_SIZE,
-          cy / TARGET_SIZE,
-          w / TARGET_SIZE,
-          h / TARGET_SIZE,
-        ],
+        box: [cx / TARGET_SIZE, cy / TARGET_SIZE, w / TARGET_SIZE, h / TARGET_SIZE],
         classId,
         confidence: maxScore,
       });
@@ -140,14 +129,7 @@ const runInference = async (
 };
 
 self.onmessage = async (event: MessageEvent<InferenceWorkerInput>) => {
-  const {
-    imageDataArray,
-    imageWidth,
-    imageHeight,
-    modelPath,
-    confidenceThreshold,
-    isFirstPage,
-  } = event.data;
+  const { imageDataArray, imageWidth, imageHeight, modelPath, confidenceThreshold, isFirstPage } = event.data;
 
   try {
     const fields = await runInference(

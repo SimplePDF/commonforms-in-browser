@@ -1,8 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 
-type PdfValidationErrorCode =
-  | "pdf_encrypted_or_malformed"
-  | "pdf_processing_failed";
+type PdfValidationErrorCode = "pdf_encrypted_or_malformed" | "pdf_processing_failed";
 
 type PdfValidationWarningCode = "pdf_has_acrofields";
 
@@ -17,9 +15,7 @@ type PdfValidationResult =
       error: { code: PdfValidationErrorCode; errorMessage?: string };
     };
 
-export const ensureValidPDF = async (
-  pdfFile: File
-): Promise<PdfValidationResult> => {
+export const ensureValidPDF = async (pdfFile: File): Promise<PdfValidationResult> => {
   try {
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdfDocument = await PDFDocument.load(arrayBuffer);

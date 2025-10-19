@@ -33,10 +33,7 @@ export function DetectionResults({ result }: DetectionResultsProps) {
   }
 
   const currentPage = result.pages[currentPageIndex] || result.pages[0];
-  const totalFields = result.pages.reduce(
-    (sum, page) => sum + page.fields.length,
-    0
-  );
+  const totalFields = result.pages.reduce((sum, page) => sum + page.fields.length, 0);
 
   const handlePreviousPage = () => {
     setCurrentPageIndex((prev) => Math.max(0, prev - 1));
@@ -50,9 +47,7 @@ export function DetectionResults({ result }: DetectionResultsProps) {
     <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
       {/* Visualization */}
       <div className="col-span-1 md:col-span-3">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-          {t("detectionResults.detectedFormFields")}
-        </h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{t("detectionResults.detectedFormFields")}</h2>
         <img
           src={currentPage.imageData}
           alt={`Detected Fields - Page ${currentPageIndex + 1}`}
@@ -65,24 +60,15 @@ export function DetectionResults({ result }: DetectionResultsProps) {
         <div className="mt-4 md:mt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-3 md:gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <div
-                className="w-4 h-4 rounded"
-                style={{ backgroundColor: "#3B82F6" }}
-              ></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#3B82F6" }}></div>
               <span>TextBox</span>
             </div>
             <div className="flex items-center gap-2">
-              <div
-                className="w-4 h-4 rounded"
-                style={{ backgroundColor: "#10B981" }}
-              ></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#10B981" }}></div>
               <span>ChoiceButton</span>
             </div>
             <div className="flex items-center gap-2">
-              <div
-                className="w-4 h-4 rounded"
-                style={{ backgroundColor: "#F59E0B" }}
-              ></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#F59E0B" }}></div>
               <span>Signature</span>
             </div>
           </div>
@@ -100,7 +86,10 @@ export function DetectionResults({ result }: DetectionResultsProps) {
                 ←
               </button>
               <span className="text-sm font-medium">
-                {t("detectionResults.pageOfTotal", { current: currentPageIndex + 1, total: result.pages.length })}
+                {t("detectionResults.pageOfTotal", {
+                  current: currentPageIndex + 1,
+                  total: result.pages.length,
+                })}
               </span>
               <button
                 onClick={handleNextPage}
@@ -140,9 +129,7 @@ export function DetectionResults({ result }: DetectionResultsProps) {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">{t("detectionResults.processingTime")}</span>
-            <span className="font-semibold text-emerald-600">
-              {result.processingTime.toFixed(0)}ms
-            </span>
+            <span className="font-semibold text-emerald-600">{result.processingTime.toFixed(0)}ms</span>
           </div>
         </div>
       </div>

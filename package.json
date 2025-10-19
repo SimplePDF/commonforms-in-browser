@@ -6,7 +6,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test:types": "tsc --noEmit"
+    "test:types": "tsc --noEmit",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "@simplepdf/react-embed-pdf": "^1.9.0",

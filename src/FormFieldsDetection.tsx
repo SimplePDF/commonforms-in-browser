@@ -5,29 +5,19 @@ import * as pdfjsLib from "pdfjs-dist";
 import { detectFormFields } from "./lib/formFieldDetection";
 import { applyAcroFields } from "./lib/applyAcroFields";
 import { ensureValidPDF } from "./lib/ensureValidPDF";
-import {
-  ModelSelection,
-  type ModelType,
-  type ModelOption,
-} from "./components/ModelSelection";
-import {
-  DetectionResults,
-  type ProcessingResult,
-} from "./components/DetectionResults";
+import { ModelSelection, type ModelType, type ModelOption } from "./components/ModelSelection";
+import { DetectionResults, type ProcessingResult } from "./components/DetectionResults";
 import { ProcessingSteps } from "./components/ProcessingSteps";
 import { Header } from "./components/Header";
 import { StatusMessage, type Status } from "./components/StatusMessage";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
-ort.env.wasm.wasmPaths =
-  "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/";
+ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/";
 
 const MODEL_URLS: Record<ModelType, string> = {
-  "FFDNet-S":
-    "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/FFDNet-S.onnx",
-  "FFDNet-L":
-    "https://huggingface.co/jbarrow/FFDNet-L-cpu/resolve/main/FFDNet-L.onnx",
+  "FFDNet-S": "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/FFDNet-S.onnx",
+  "FFDNet-L": "https://huggingface.co/jbarrow/FFDNet-L-cpu/resolve/main/FFDNet-L.onnx",
 };
 
 const AVAILABLE_MODELS: ModelOption[] = [
@@ -48,19 +38,16 @@ interface PdfFileState {
 export function FormFieldsDetection() {
   const { t } = useTranslation();
   const [pdfFile, setPdfFile] = useState<PdfFileState | null>(null);
-  const [modelConfiguration, setModelConfiguration] =
-    useState<ModelConfiguration>({
-      selectedModel: "FFDNet-S",
-      confidenceThreshold: 0.4,
-    });
+  const [modelConfiguration, setModelConfiguration] = useState<ModelConfiguration>({
+    selectedModel: "FFDNet-S",
+    confidenceThreshold: 0.4,
+  });
   const [result, setResult] = useState<ProcessingResult | null>(null);
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file || file.type !== "application/pdf") {
@@ -161,7 +148,10 @@ export function FormFieldsDetection() {
       return;
     }
 
-    setStatus({ type: "loading", message: t("statusMessages.applyingAcroFields") });
+    setStatus({
+      type: "loading",
+      message: t("statusMessages.applyingAcroFields"),
+    });
 
     const acroFieldsResult = await applyAcroFields({
       pdfFile: pdfFile.file,

@@ -67,10 +67,7 @@ const COLORS = {
   },
 };
 
-const drawDetections = (
-  canvas: HTMLCanvasElement,
-  fields: DetectedField[]
-): void => {
+const drawDetections = (canvas: HTMLCanvasElement, fields: DetectedField[]): void => {
   const ctx = canvas.getContext("2d")!;
 
   fields.forEach((field) => {
@@ -88,11 +85,7 @@ const drawDetections = (
     ctx.fillRect(absX, absY - 12.5, absW, 12.5);
     ctx.fillStyle = "white";
     ctx.font = "10px Arial";
-    ctx.fillText(
-      `${field.type} (${(field.confidence * 100).toFixed(0)}%)`,
-      absX + 3,
-      absY - 3
-    );
+    ctx.fillText(`${field.type} (${(field.confidence * 100).toFixed(0)}%)`, absX + 3, absY - 3);
   });
 };
 
@@ -109,10 +102,7 @@ const renderPdfPageToImageData = async (
   };
 }> => {
   const viewport = page.getViewport({ scale: 1.0 });
-  const scale = Math.min(
-    TARGET_SIZE / viewport.width,
-    TARGET_SIZE / viewport.height
-  );
+  const scale = Math.min(TARGET_SIZE / viewport.width, TARGET_SIZE / viewport.height);
   const scaledViewport = page.getViewport({ scale });
 
   const canvas = document.createElement("canvas");
@@ -152,11 +142,8 @@ const renderPdfPageToImageData = async (
   };
 };
 
-export const detectFormFields = async (
-  parameters: DetectionParameters
-): Promise<DetectionResult> => {
-  const { pdfFile, modelPath, confidenceThreshold, onUpdateDetectionStatus } =
-    parameters;
+export const detectFormFields = async (parameters: DetectionParameters): Promise<DetectionResult> => {
+  const { pdfFile, modelPath, confidenceThreshold, onUpdateDetectionStatus } = parameters;
 
   try {
     const startTime = performance.now();
