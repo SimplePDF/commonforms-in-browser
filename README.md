@@ -1,7 +1,6 @@
 # CommonForms in Browser
 
-<img width="1583" height="747" alt="commonforms-in-browser" src="https://github.com/user-attachments/assets/a36c11f6-8bf6-4b00-a0fb-9e8a5b9622d4" />
-
+<img width="1674" height="898" alt="Screenshot 2025-10-19 at 11 35 20" src="https://github.com/user-attachments/assets/953a9edd-59a3-48ed-86a2-99e3fd15a005" />
 
 ## Running locally
 
