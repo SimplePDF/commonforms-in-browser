@@ -69,15 +69,15 @@ export function ProcessingSteps({
   };
   return (
     <>
-      <div className="mb-8 grid md:grid-cols-3 gap-6">
+      <div className="mb-6 md:mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <div>
           <div className="mb-3">
-            <span className="text-2xl font-bold text-gray-900">Step 1:</span>
-            <span className="text-xl font-semibold text-gray-700 ml-2">
+            <span className="text-lg md:text-2xl font-bold text-gray-900">Step 1:</span>
+            <span className="text-base md:text-xl font-semibold text-gray-700 ml-2">
               Upload PDF Form
             </span>
           </div>
-          <div className="border border-gray-300 rounded-lg p-6 text-center hover:border-sky-500 transition-colors flex flex-col justify-start h-32">
+          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center hover:border-sky-500 transition-colors flex flex-col justify-start min-h-32">
             <input
               ref={fileInputRef}
               type="file"
@@ -109,12 +109,12 @@ export function ProcessingSteps({
 
         <div>
           <div className="mb-3">
-            <span className="text-2xl font-bold text-gray-900">Step 2:</span>
-            <span className="text-xl font-semibold text-gray-700 ml-2">
+            <span className="text-lg md:text-2xl font-bold text-gray-900">Step 2:</span>
+            <span className="text-base md:text-xl font-semibold text-gray-700 ml-2">
               Detect Form Fields
             </span>
           </div>
-          <div className="border border-gray-300 rounded-lg p-6 text-center flex flex-col justify-start h-32">
+          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start min-h-32">
             <button
               onClick={onDetect}
               disabled={!pdfFile || isProcessing}
@@ -131,12 +131,12 @@ export function ProcessingSteps({
 
         <div>
           <div className="mb-3">
-            <span className="text-2xl font-bold text-gray-900">Step 3:</span>
-            <span className="text-xl font-semibold text-gray-700 ml-2">
+            <span className="text-lg md:text-2xl font-bold text-gray-900">Step 3:</span>
+            <span className="text-base md:text-xl font-semibold text-gray-700 ml-2">
               Fill Or Download
             </span>
           </div>
-          <div className="border border-gray-300 rounded-lg p-6 text-center flex flex-col justify-start gap-3 h-32">
+          <div className="border border-gray-300 rounded-lg p-4 md:p-6 text-center flex flex-col justify-start gap-2 md:gap-3 min-h-32">
             <EmbedPDF>
               <a
                 href={pdfWithAcroFieldsBlobUrl ?? ""}
@@ -158,7 +158,7 @@ export function ProcessingSteps({
                   : "bg-cyan-800 hover:bg-cyan-900 text-white cursor-pointer"
               }`}
             >
-              Download PDF
+              Download fillable PDF
             </button>
           </div>
         </div>

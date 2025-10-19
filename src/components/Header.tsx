@@ -2,21 +2,22 @@ export function Header() {
   return (
     <>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center justify-between">
-          Browser-based PDF form fields detection
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+          <span>Browser-based PDF form fields detection</span>
           <iframe
             src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-in-browser&type=star&count=true&size=large"
             width="150"
             height="30"
             title="GitHub"
+            className="shrink-0"
           ></iframe>
         </h1>
-        <p className="text-gray-600 text-lg">
+        <p className="text-gray-600 text-base md:text-lg">
           Automatically detect form fields in PDFs with CommonForms using ONNX
           Runtime Web
         </p>
-        <div className="flex gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-4">
           <a
             href="https://github.com/jbarrow/commonforms"
             target="_blank"
@@ -53,7 +54,7 @@ export function Header() {
       </div>
 
       {/* Info Sections */}
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
+      <div className="grid md:grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
         <div className="p-3 bg-sky-50 rounded-lg border border-sky-200">
           <h3 className="text-lg font-semibold text-sky-900 mb-2">
             About CommonForms

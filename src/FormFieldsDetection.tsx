@@ -133,9 +133,9 @@ export function FormFieldsDetection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-3 md:p-4">
       <div className="max-w-[96rem] mx-auto">
-        <div className="bg-white rounded-lg shadow-xl p-8">
+        <div className="bg-white rounded-lg shadow-xl p-4 md:p-6 lg:p-8">
           <Header />
 
           <ModelSelection

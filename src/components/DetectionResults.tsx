@@ -45,10 +45,10 @@ export function DetectionResults({ result }: DetectionResultsProps) {
   };
 
   return (
-    <div className="mt-8 grid md:grid-cols-4 gap-6">
+    <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
       {/* Visualization */}
-      <div className="col-span-4 md:col-span-3">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+      <div className="col-span-1 md:col-span-3">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
           Detected Form Fields
         </h2>
         <img
@@ -60,8 +60,8 @@ export function DetectionResults({ result }: DetectionResultsProps) {
             height: "auto",
           }}
         />
-        <div className="mt-6 flex items-center justify-between">
-          <div className="flex gap-4 text-sm">
+        <div className="mt-4 md:mt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-3 md:gap-4 text-sm">
             <div className="flex items-center gap-2">
               <div
                 className="w-4 h-4 rounded"
@@ -117,9 +117,9 @@ export function DetectionResults({ result }: DetectionResultsProps) {
       </div>
 
       {/* Statistics */}
-      <div className="col-span-4 md:col-span-1">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
-        <div className="bg-gray-50 rounded-lg p-6 space-y-4">
+      <div className="col-span-1 md:col-span-1">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
+        <div className="bg-gray-50 rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
           <div className="flex justify-between">
             <span className="text-gray-600">Total Pages:</span>
             <span className="font-semibold">{result.pages.length}</span>
