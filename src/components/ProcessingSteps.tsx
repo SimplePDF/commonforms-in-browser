@@ -35,7 +35,9 @@ export function ProcessingSteps({
 
   const handleLoadExample = async () => {
     try {
-      const response = await fetch("https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/flattened_w9.pdf");
+      const response = await fetch(
+        "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf"
+      );
 
       if (!response.ok) {
         console.error("Failed to fetch example PDF:", response.statusText);
@@ -43,7 +45,7 @@ export function ProcessingSteps({
       }
 
       const blob = await response.blob();
-      const file = new File([blob], "flattened_w9.pdf", {
+      const file = new File([blob], "cerfa_14571-05_LONG_SEJOUR_EN.pdf", {
         type: "application/pdf",
       });
 
@@ -94,7 +96,7 @@ export function ProcessingSteps({
                 onClick={handleLoadExample}
                 className="px-4 py-2 bg-sky-100 text-sky-700 rounded-lg hover:bg-sky-200 transition-colors font-medium text-sm border border-sky-300 cursor-pointer"
               >
-                W-9 form example
+                CERFA form example
               </button>
             </div>
             {pdfFile && (
