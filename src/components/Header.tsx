@@ -50,6 +50,16 @@ export function Header() {
           >
             SimplePDF
           </a>
+          <span
+            className="px-3 py-1 rounded-full text-sm font-medium border text-white"
+            style={{
+              backgroundColor: "oklch(81% 0.117 11.638)",
+              borderColor: "oklch(70% 0.117 11.638)",
+              textShadow: "0 1px 2px oklch(70% 0.117 11.638)",
+            }}
+          >
+            Privacy-friendly
+          </span>
         </div>
       </div>
 
@@ -109,7 +119,7 @@ export function Header() {
             </li>
             <li>• Detect and add the relevant PDF acrofields</li>
             <li>• Runs entirely in the browser</li>
-            <li>• Fill or Download or the resulting PDF</li>
+            <li>• Fill or download or the resulting PDF</li>
           </ul>
         </div>
       </div>
