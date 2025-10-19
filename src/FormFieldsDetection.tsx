@@ -21,9 +21,14 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dis
 ort.env.wasm.wasmPaths =
   "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/";
 
+const MODEL_URLS: Record<ModelType, string> = {
+  "FFDNet-S": "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/FFDNet-S.onnx",
+  "FFDNet-L": "https://huggingface.co/jbarrow/FFDNet-L-cpu/resolve/main/FFDNet-L.onnx",
+};
+
 const AVAILABLE_MODELS: ModelOption[] = [
-  { value: "FFDNet-S", label: "FFDNet-S (37MB, faster)" },
-  { value: "FFDNet-L", label: "FFDNet-L (97MB, more accurate)" },
+  { value: "FFDNet-S", label: "FFDNet-S (faster)" },
+  { value: "FFDNet-L", label: "FFDNet-L (more accurate)" },
 ];
 
 interface ModelConfiguration {
@@ -63,7 +68,7 @@ export function FormFieldsDetection() {
 
     const detectionResult = await detectFormFields({
       pdfFile,
-      modelPath: `/${modelConfiguration.selectedModel}.onnx`,
+      modelPath: MODEL_URLS[modelConfiguration.selectedModel],
       confidenceThreshold: modelConfiguration.confidenceThreshold,
       onUpdateDetectionStatus: (message) => {
         setStatus({ type: "loading", message });

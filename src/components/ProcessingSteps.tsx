@@ -35,7 +35,7 @@ export function ProcessingSteps({
 
   const handleLoadExample = async () => {
     try {
-      const response = await fetch("/flattened_w9.pdf");
+      const response = await fetch("https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/flattened_w9.pdf");
 
       if (!response.ok) {
         console.error("Failed to fetch example PDF:", response.statusText);

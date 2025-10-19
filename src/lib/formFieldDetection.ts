@@ -161,13 +161,12 @@ export const detectFormFields = async (
       rgbData[2 * canvas.height * canvas.width + i] = b;
     }
 
-    const modelName =
-      modelPath.split("/").pop()?.replace(".onnx", "") || "model";
-    const modelSize =
-      modelName.includes("FFDNet-L") || modelName.includes("L")
-        ? "97MB"
-        : "37MB";
-    onUpdateDetectionStatus(`Loading ${modelName} model (${modelSize})...`);
+    const modelName = modelPath.includes("FFDNet-L")
+      ? "FFDNet-L"
+      : modelPath.includes("FFDNet-S")
+        ? "FFDNet-S"
+        : "model";
+    onUpdateDetectionStatus(`Loading ${modelName} model...`);
 
     const session = await ort.InferenceSession.create(modelPath, {
       executionProviders: ["wasm"],
