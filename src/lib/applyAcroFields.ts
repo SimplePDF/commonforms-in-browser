@@ -7,6 +7,7 @@ const MULTILINE_HEIGHT_THRESHOLD = 2;
 interface ApplyAcroFieldsParameters {
   pdfFile: File;
   detectionResult: DetectionResult;
+  stripExistingAcroFields: boolean;
 }
 
 type ApplyAcroFieldsErrorCode =
@@ -30,7 +31,7 @@ const generateFieldName = (type: string, index: number): string => {
 export const applyAcroFields = async (
   parameters: ApplyAcroFieldsParameters
 ): Promise<ApplyAcroFieldsResult> => {
-  const { pdfFile, detectionResult } = parameters;
+  const { pdfFile, detectionResult, stripExistingAcroFields } = parameters;
 
   if (!detectionResult.success) {
     return {
@@ -45,8 +46,23 @@ export const applyAcroFields = async (
   try {
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdfDoc = await PDFDocument.load(arrayBuffer);
-    const form = pdfDoc.getForm();
 
+    if (stripExistingAcroFields) {
+      try {
+        const form = pdfDoc.getForm();
+        const existingFields = form.getFields();
+
+        if (existingFields.length > 0) {
+          form.flatten();
+        }
+      } catch (e) {
+        const error = e as Error;
+        console.error(`Failed to flatten existing form fields: ${error.name}: ${error.message}`);
+        // Fail silently - better to add detected fields alongside existing ones than to fail entirely
+      }
+    }
+
+    const form = pdfDoc.getForm();
     const pages = pdfDoc.getPages();
     const fieldTypeCounters: Record<string, number> = {};
 

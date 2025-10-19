@@ -3,7 +3,8 @@ import { ReactNode } from "react";
 type Status =
   | { type: "idle" }
   | { type: "loading"; message: string }
-  | { type: "error"; message: ReactNode };
+  | { type: "error"; message: ReactNode }
+  | { type: "warning"; message: ReactNode };
 
 interface StatusMessageProps {
   status: Status;
@@ -24,6 +25,14 @@ export function StatusMessage({ status }: StatusMessageProps) {
     return (
       <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
         <div className="text-red-800">{status.message}</div>
+      </div>
+    );
+  }
+
+  if (status.type === "warning") {
+    return (
+      <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+        <div className="text-orange-800">{status.message}</div>
       </div>
     );
   }

@@ -39,8 +39,13 @@ interface ModelConfiguration {
   confidenceThreshold: number;
 }
 
+interface PdfFileState {
+  file: File;
+  hasAcrofields: boolean;
+}
+
 export function FormFieldsDetection() {
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfFile, setPdfFile] = useState<PdfFileState | null>(null);
   const [modelConfiguration, setModelConfiguration] =
     useState<ModelConfiguration>({
       selectedModel: "FFDNet-S",
@@ -71,8 +76,20 @@ export function FormFieldsDetection() {
       return;
     }
 
-    setPdfFile(file);
-    setStatus({ type: "idle" });
+    setPdfFile({
+      file,
+      hasAcrofields: validationResult.data.warning?.code === "pdf_has_acrofields",
+    });
+
+    if (validationResult.data.warning) {
+      setStatus({
+        type: "warning",
+        message: validationResult.data.warning.message,
+      });
+    } else {
+      setStatus({ type: "idle" });
+    }
+
     setResult(null);
   };
 
@@ -82,7 +99,7 @@ export function FormFieldsDetection() {
     }
 
     const detectionResult = await detectFormFields({
-      pdfFile,
+      pdfFile: pdfFile.file,
       modelPath: MODEL_URLS[modelConfiguration.selectedModel],
       confidenceThreshold: modelConfiguration.confidenceThreshold,
       onUpdateDetectionStatus: (message) => {
@@ -101,8 +118,9 @@ export function FormFieldsDetection() {
     setStatus({ type: "loading", message: "Applying AcroFields to PDF..." });
 
     const acroFieldsResult = await applyAcroFields({
-      pdfFile,
+      pdfFile: pdfFile.file,
       detectionResult,
+      stripExistingAcroFields: pdfFile.hasAcrofields,
     });
 
     if (!acroFieldsResult.success) {
@@ -157,7 +175,7 @@ export function FormFieldsDetection() {
           />
 
           <ProcessingSteps
-            pdfFile={pdfFile}
+            pdfFile={pdfFile?.file ?? null}
             isProcessing={status.type === "loading"}
             hasResult={result !== null}
             pdfWithAcroFieldsBlobUrl={result?.pdfWithAcroFieldsBlobUrl ?? null}

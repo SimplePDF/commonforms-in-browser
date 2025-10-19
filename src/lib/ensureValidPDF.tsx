@@ -5,8 +5,14 @@ type PdfValidationErrorCode =
   | "pdf_encrypted_or_malformed"
   | "pdf_processing_failed";
 
+type PdfValidationWarningCode = "pdf_has_acrofields";
+
+type PdfValidationData = {
+  warning: { code: PdfValidationWarningCode; message: ReactNode } | null;
+};
+
 type PdfValidationResult =
-  | { success: true; data: null }
+  | { success: true; data: PdfValidationData }
   | {
       success: false;
       error: { code: PdfValidationErrorCode; message: ReactNode };
@@ -20,7 +26,27 @@ export const ensureValidPDF = async (
     const pdfDocument = await PDFDocument.load(arrayBuffer);
     await pdfDocument.save();
 
-    return { success: true, data: null };
+    const form = pdfDocument.getForm();
+    const fields = form.getFields();
+
+    if (fields.length > 0) {
+      return {
+        success: true,
+        data: {
+          warning: {
+            code: "pdf_has_acrofields",
+            message: `This PDF already contains ${fields.length} fillable field${fields.length === 1 ? "" : "s"}. If you proceed, these will be replaced with the newly detected fields.`,
+          },
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        warning: null,
+      },
+    };
   } catch (e) {
     const error = e as Error;
 
