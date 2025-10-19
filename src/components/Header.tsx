@@ -4,7 +4,7 @@ export function Header() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center justify-between">
-          Browser-based PDF Form Fields detection
+          Browser-based PDF form fields detection
           <iframe
             src="https://ghbtns.com/github-btn.html?user=SimplePDF&repo=commonforms-in-browser&type=star&count=true&size=large"
             width="150"
@@ -66,6 +66,15 @@ export function Header() {
               rel="noopener noreferrer"
             >
               CommonForms
+            </a>{" "}
+            by{" "}
+            <a
+              href="https://x.com/barrowjoseph"
+              className="text-sky-900 hover:text-sky-700 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Joe Barrow
             </a>{" "}
             uses FFDNet models trained on a large dataset of forms to
             automatically detect text boxes, checkboxes, and signature fields in
