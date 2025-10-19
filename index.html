@@ -5,6 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auto-detection of PDF form fields using CommonForms</title>
+
+    <!-- Prefetch models for faster loading (especially the L one) -->
+    <link
+      rel="prefetch"
+      href="https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/FFDNet-S.onnx"
+      as="fetch"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="prefetch"
+      href="https://huggingface.co/jbarrow/FFDNet-L-cpu/resolve/main/FFDNet-L.onnx"
+      as="fetch"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="prefetch"
+      href="https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/flattened_w9.pdf"
+      as="fetch"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <div id="root"></div>

@@ -166,7 +166,10 @@ export const detectFormFields = async (
       : modelPath.includes("FFDNet-S")
         ? "FFDNet-S"
         : "model";
-    onUpdateDetectionStatus(`Loading ${modelName} model...`);
+
+    onUpdateDetectionStatus(
+      `Running form field detection using ${modelName} model...`
+    );
 
     const session = await ort.InferenceSession.create(modelPath, {
       executionProviders: ["wasm"],
@@ -179,7 +182,6 @@ export const detectFormFields = async (
       canvas.width,
     ]);
 
-    onUpdateDetectionStatus("Running form field detection...");
     const feeds = { images: tensor };
     const output = await session.run(feeds);
 
