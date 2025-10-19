@@ -41,17 +41,19 @@ export function ModelSelection({
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Confidence Threshold:
+            Confidence Threshold: {confidenceThreshold.toFixed(1)}
           </label>
-          <input
-            type="number"
-            min="0.1"
-            max="1"
-            step="0.1"
-            value={confidenceThreshold}
-            onChange={(e) => onChangeConfidenceThreshold(Number(e.target.value))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+          <div className="flex items-center h-10">
+            <input
+              type="range"
+              min="0.1"
+              max="1"
+              step="0.1"
+              value={confidenceThreshold}
+              onChange={(e) => onChangeConfidenceThreshold(Number(e.target.value))}
+              className="w-1/2 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+            />
+          </div>
         </div>
       </div>
     </div>
