@@ -197,4 +197,3 @@ export const detectFormFields = async (parameters: DetectionParameters): Promise
     };
   }
 };
-
