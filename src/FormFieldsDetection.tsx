@@ -5,6 +5,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import { detectFormFields } from "./lib/formFieldDetection";
 import { applyAcroFields } from "./lib/applyAcroFields";
 import { ensureValidPDF } from "./lib/ensureValidPDF";
+import { drawDetections } from "./lib/drawDetections";
 import { ModelSelection, type ModelType, type ModelOption } from "./components/ModelSelection";
 import { DetectionResults, type ProcessingResult } from "./components/DetectionResults";
 import { ProcessingSteps } from "./components/ProcessingSteps";
@@ -178,8 +179,10 @@ export function FormFieldsDetection() {
     });
     const pdfWithAcroFieldsBlobUrl = URL.createObjectURL(pdfBlob);
 
+    const detectionDataWithDrawings = drawDetections(detectionResult.data);
+
     setResult({
-      pages: detectionResult.data.pages,
+      pages: detectionDataWithDrawings.pages,
       processingTime: detectionResult.data.processingTime,
       modelInfo: detectionResult.data.modelInfo,
       pdfWithAcroFieldsBlobUrl,

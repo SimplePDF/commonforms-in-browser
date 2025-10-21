@@ -1,19 +1,14 @@
 import * as pdfjsLib from "pdfjs-dist";
 import InferenceWorker from "../workers/inference.worker.ts?worker";
+import { type DetectedField } from "../workers/inference.worker";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 const TARGET_SIZE = 1216;
 
-interface DetectedField {
-  type: string;
-  bbox: [number, number, number, number];
-  confidence: number;
-}
-
 interface PageDetectionData {
   fields: DetectedField[];
-  imageData: string;
+  imageData: ImageData;
   pdfMetadata: {
     originalWidth: number;
     originalHeight: number;
@@ -51,43 +46,6 @@ type ErrorCode =
 export type DetectionResult =
   | { success: true; data: DetectionData }
   | { success: false; error: { code: ErrorCode; message: string } };
-
-const COLORS = {
-  TextBox: {
-    label: "#3B82F6",
-    background: "#a4dcf891",
-  },
-  ChoiceButton: {
-    label: "#10B981",
-    background: "#a4dcf891",
-  },
-  Signature: {
-    label: "#F59E0B",
-    background: "#a4dcf891",
-  },
-};
-
-const drawDetections = (canvas: HTMLCanvasElement, fields: DetectedField[]): void => {
-  const ctx = canvas.getContext("2d")!;
-
-  fields.forEach((field) => {
-    const [x, y, w, h] = field.bbox;
-    const absX = x * canvas.width;
-    const absY = y * canvas.height;
-    const absW = w * canvas.width;
-    const absH = h * canvas.height;
-
-    const fieldColors = COLORS[field.type as keyof typeof COLORS];
-    ctx.fillStyle = fieldColors.background;
-    ctx.fillRect(absX, absY, absW, absH);
-
-    ctx.fillStyle = fieldColors.label;
-    ctx.fillRect(absX, absY - 12.5, absW, 12.5);
-    ctx.fillStyle = "white";
-    ctx.font = "10px Arial";
-    ctx.fillText(`${field.type} (${(field.confidence * 100).toFixed(0)}%)`, absX + 3, absY - 3);
-  });
-};
 
 const renderPdfPageToImageData = async (
   page: pdfjsLib.PDFPageProxy
@@ -205,17 +163,9 @@ export const detectFormFields = async (parameters: DetectionParameters): Promise
         });
       });
 
-      const canvas = document.createElement("canvas");
-      canvas.width = TARGET_SIZE;
-      canvas.height = TARGET_SIZE;
-      const ctx = canvas.getContext("2d")!;
-      ctx.putImageData(imageData, 0, 0);
-
-      drawDetections(canvas, inferenceResult.fields);
-
       pages.push({
         fields: inferenceResult.fields,
-        imageData: canvas.toDataURL(),
+        imageData,
         pdfMetadata,
       });
     }
@@ -247,3 +197,4 @@ export const detectFormFields = async (parameters: DetectionParameters): Promise
     };
   }
 };
+

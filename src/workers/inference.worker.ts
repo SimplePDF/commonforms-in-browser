@@ -3,7 +3,15 @@ import { applyNonMaximumSuppression } from "../lib/utils";
 
 ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/";
 
-const CLASS_NAMES = ["TextBox", "ChoiceButton", "Signature"];
+export type FieldType = "ChoiceButton" | "Signature" | "TextBox";
+
+export interface DetectedField {
+  type: FieldType;
+  bbox: [number, number, number, number];
+  confidence: number;
+}
+
+const CLASS_NAMES: readonly FieldType[] = ["TextBox", "ChoiceButton", "Signature"];
 const IOU_THRESHOLD = 0.45;
 const TARGET_SIZE = 1216;
 
@@ -14,12 +22,6 @@ interface InferenceWorkerInput {
   modelPath: string;
   confidenceThreshold: number;
   isFirstPage: boolean;
-}
-
-interface DetectedField {
-  type: string;
-  bbox: [number, number, number, number];
-  confidence: number;
 }
 
 interface InferenceWorkerOutput {

@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-interface DetectedField {
-  type: string;
-  bbox: [number, number, number, number];
-  confidence: number;
-}
+import { type DetectedField } from "../workers/inference.worker";
+import { FIELD_COLORS } from "../lib/drawDetections";
 
 interface PageResult {
   fields: DetectedField[];
@@ -60,15 +56,15 @@ export function DetectionResults({ result }: DetectionResultsProps) {
         <div className="mt-4 md:mt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-3 md:gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#3B82F6" }}></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: FIELD_COLORS.TextBox.label }}></div>
               <span>TextBox</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#10B981" }}></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: FIELD_COLORS.ChoiceButton.label }}></div>
               <span>ChoiceButton</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#F59E0B" }}></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: FIELD_COLORS.Signature.label }}></div>
               <span>Signature</span>
             </div>
           </div>
@@ -137,4 +133,4 @@ export function DetectionResults({ result }: DetectionResultsProps) {
   );
 }
 
-export type { ProcessingResult, DetectedField };
+export type { ProcessingResult };
