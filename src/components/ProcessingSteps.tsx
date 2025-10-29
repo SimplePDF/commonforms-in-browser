@@ -13,7 +13,7 @@ interface ProcessingStepsProps {
 }
 
 const EXAMPLE_PDF = {
-  URL: "https://us-beautiful-space.nyc3.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf",
+  URL: "https://us-beautiful-space.nyc3.cdn.digitaloceanspaces.com/commonforms/cerfa_14571-05_LONG_SEJOUR_EN.pdf",
   FILENAME: "cerfa_14571-05_LONG_SEJOUR_EN.pdf",
 };
 
